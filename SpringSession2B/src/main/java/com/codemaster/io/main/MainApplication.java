@@ -1,13 +1,16 @@
-package com.codemaster.io;
+package com.codemaster.io.main;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
-@SpringBootApplication
+import java.io.IOException;
+
+
+@SpringBootApplication(scanBasePackages = {"com.codemaster.io"})
 public class MainApplication {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         ApplicationContext ctx = SpringApplication.run(MainApplication.class);
     }

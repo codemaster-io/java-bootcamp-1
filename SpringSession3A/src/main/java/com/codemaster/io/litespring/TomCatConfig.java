@@ -11,27 +11,34 @@ import java.io.File;
 public class TomCatConfig {
     private static Tomcat tomcat;
     private static Context context;
-
     private static final String contextPath = "" ;
 
-    protected static void registerServlet(Object instance, Class<?> clazz, String urlMapping) {
-        tomcat.addServlet(contextPath, clazz.getSimpleName(), (HttpServlet) instance);
-        context.addServletMappingDecoded(urlMapping, clazz.getSimpleName());
+    public TomCatConfig(int port) {
+        initTomcat(port);
     }
 
-    protected static void initTomcat() throws LifecycleException {
-        tomcat = new Tomcat();
-        tomcat.setPort(8080);
-        tomcat.getConnector();
+    private void initTomcat(int port) {
+        try {
+            tomcat = new Tomcat();
+            tomcat.setPort(port);
+            tomcat.getConnector();
 
-        // Create a host
-        Host host = tomcat.getHost();
-        host.setName("localhost");
-        host.setAppBase("webapps");
+            // Create a host
+            Host host = tomcat.getHost();
+            host.setName("localhost");
+            host.setAppBase("webapps");
 
-        tomcat.start();
+            tomcat.start();
 
-        String docBase = new File(".").getAbsolutePath();
-        context = tomcat.addContext(contextPath, docBase);
+            String docBase = new File(".").getAbsolutePath();
+            context = tomcat.addContext(contextPath, docBase);
+        } catch (LifecycleException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected void registerServlet(Object instance, String className, String urlMapping) {
+        tomcat.addServlet(contextPath, className, (HttpServlet) instance);
+        context.addServletMappingDecoded(urlMapping, className);
     }
 }
