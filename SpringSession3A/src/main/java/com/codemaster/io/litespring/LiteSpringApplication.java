@@ -9,7 +9,7 @@ import java.util.*;
 
 public class LiteSpringApplication {
 
-    public static ApplicationContext start(Class<?> appClass) throws Exception {
+    public static ApplicationContext run(Class<?> appClass) throws Exception {
 
         ApplicationContext applicationContext = ApplicationContext.getInstance();
 

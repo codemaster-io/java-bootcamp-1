@@ -15,7 +15,7 @@ public class MainApplication {
 
     public static void main(String[] args) throws Exception {
 
-        ApplicationContext applicationContext = LiteSpringApplication.start(MainApplication.class);
+        ApplicationContext applicationContext = LiteSpringApplication.run(MainApplication.class);
 
 
         ProductService productService = (ProductService) applicationContext.getBean(ProductService.class);
