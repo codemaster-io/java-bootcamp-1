@@ -63,7 +63,7 @@ public class DispatcherServlet extends HttpServlet {
 
             return;
         }
-//        send404Response(request, response);
+        send404Response(request, response);
     }
 
     private Object invokeMethod(
