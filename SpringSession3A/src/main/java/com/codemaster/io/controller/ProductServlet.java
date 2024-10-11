@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-@Servlet(urlMapping = "/api/products/*")
+@Servlet(urlMapping = "/")
 public class ProductServlet extends HttpServlet {
     @Autowired
     private ProductController productController;

@@ -1,5 +1,6 @@
-package com.codemaster.io;
+package com.codemaster.io.filters;
 
+import com.codemaster.io.litespring.UserContext;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -11,7 +12,6 @@ public class UserContextFilter implements Filter {
             ServletResponse response,
             FilterChain chain) throws IOException, ServletException {
 
-        // Assuming user is authenticated and we have the user ID
         String username = ((HttpServletRequest) request).getHeader("X-User");
 
         // Store user information in ThreadLocal for this thread/request

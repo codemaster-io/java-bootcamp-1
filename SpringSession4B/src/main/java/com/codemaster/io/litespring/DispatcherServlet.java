@@ -40,11 +40,9 @@ public class DispatcherServlet extends HttpServlet {
     }
 
     private void dispatch(HttpServletRequest request, HttpServletResponse response, MethodType methodType) throws ServletException, IOException {
-        System.out.println("request.getRequestURI() = " + request.getRequestURI());
         String requestPath = request.getRequestURI();
 
         for(ControllerMethod controllerMethod : controllerMethods) {
-
             if(!controllerMethod.getMethodType().equals(methodType)) continue;
 
             if(!PathExtractor.isMatchUrlPath(controllerMethod.getMappedUrl(), requestPath)) continue;
@@ -60,8 +58,6 @@ public class DispatcherServlet extends HttpServlet {
             response.getWriter().write(jsonResponse);
         }
     }
-
-
 
     private Object invokeMethod(
             HttpServletRequest req, ControllerMethod controllerMethod,
@@ -83,7 +79,12 @@ public class DispatcherServlet extends HttpServlet {
                 if(parameters[i].isAnnotationPresent(RequestBody.class)) {
                     paramObjects[i] = objectMapper.readValue(body, parameters[i].getType());
                 }
+                // special HttpServletRequest pass
+                if(parameters[i].getType().equals(HttpServletRequest.class)) {
+                    paramObjects[i] = req;
+                }
             }
+
             return controllerMethod.getMethod().invoke(controllerMethod.getInstance(), paramObjects);
         } catch (Exception e) {
             e.printStackTrace();

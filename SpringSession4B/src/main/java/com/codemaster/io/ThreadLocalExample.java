@@ -5,8 +5,7 @@ public class ThreadLocalExample {
     // Define a ThreadLocal variable
     private static ThreadLocal<Integer> threadLocalValue = new ThreadLocal<Integer>() {
         @Override
-        protected Integer initialValue() {
-            return 0; // Default value for each thread
+        protected Integer initialValue() {return 0; // Default value for each thread
         }
     };
 

@@ -1,4 +1,4 @@
-package com.codemaster.io;
+package com.codemaster.io.litespring;
 
 public class UserContext {
     private static ThreadLocal<String> userThreadLocal = new ThreadLocal<>();

@@ -62,15 +62,17 @@ public class ApplicationContext {
 
         for (Class<?> clazz : classes) {
             if(clazz.isAnnotationPresent(RestController.class)) {
-                RestController servlet = clazz.getAnnotation(RestController.class);
+                RestController controller = clazz.getAnnotation(RestController.class);
                 Object instance = beanFactory.get(clazz.getSimpleName());
 
                 for(Method method : clazz.getDeclaredMethods()) {
                     if(method.isAnnotationPresent(RequestMapping.class)) {
                         RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
+                        String mappedUrl = controller.url() + requestMapping.url();
+
                         ControllerMethod controllerMethod = ControllerMethod.builder()
                                         .method(method)
-                                        .mappedUrl(requestMapping.url())
+                                        .mappedUrl(mappedUrl)
                                         .methodType(requestMapping.type())
                                         .instance(instance)
                                         .clz(clazz)

@@ -1,6 +1,7 @@
 package com.codemaster.io.controller;
 
 
+import com.codemaster.io.litespring.UserContext;
 import com.codemaster.io.litespring.MethodType;
 import com.codemaster.io.litespring.annotation.*;
 import com.codemaster.io.models.Product;
@@ -21,6 +22,9 @@ public class ProductController {
         product.setName(request.getName());
 
         String id = productService.addProduct(product);
+
+        String ctx = UserContext.getUserContext();
+
 
         AddProductResponse addProductResponse = new AddProductResponse();
         addProductResponse.setId(id);
