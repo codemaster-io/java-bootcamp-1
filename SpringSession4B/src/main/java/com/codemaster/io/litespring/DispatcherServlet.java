@@ -11,8 +11,9 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Parameter;
+import java.util.List;
+import java.util.Map;
 
 public class DispatcherServlet extends HttpServlet {
     private final List<ControllerMethod> controllerMethods;
@@ -57,9 +58,7 @@ public class DispatcherServlet extends HttpServlet {
             response.setContentType("application/json");
             String jsonResponse = objectMapper.writeValueAsString(responseObject);
             response.getWriter().write(jsonResponse);
-            return;
         }
-        send404Response(response);
     }
 
 
@@ -108,21 +107,4 @@ public class DispatcherServlet extends HttpServlet {
         }
         return null;
     }
-
-    private void send404Response(HttpServletResponse response) throws IOException {
-        response.setStatus(HttpServletResponse.SC_NOT_FOUND); // Set HTTP status to 404
-        response.setContentType("application/json"); // Set response content type to JSON
-
-        // Create a structured JSON response object
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("errorCode", "404");
-        errorResponse.put("message", "The requested URL was not found on this server.");
-        errorResponse.put("timestamp", System.currentTimeMillis()); // Add timestamp
-
-        // Convert the error response to JSON format
-        String jsonResponse = objectMapper.writeValueAsString(errorResponse); // Use ObjectMapper to convert to JSON
-
-        response.getWriter().write(jsonResponse); // Write JSON response to output
-    }
-
 }

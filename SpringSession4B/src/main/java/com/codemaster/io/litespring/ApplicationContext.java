@@ -65,14 +65,14 @@ public class ApplicationContext {
                 for(Method method : clazz.getDeclaredMethods()) {
                     if(method.isAnnotationPresent(RequestMapping.class)) {
                         RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
-                        String mappedUrl = servlet.url() + requestMapping.url();
                         ControllerMethod controllerMethod = ControllerMethod.builder()
                                         .method(method)
-                                        .mappedUrl(mappedUrl)
+                                        .mappedUrl(requestMapping.url())
                                         .methodType(requestMapping.type())
                                         .instance(instance)
                                         .clz(clazz)
                                 .build();
+                        System.out.println("controllerMethod = " + controllerMethod);
                         controllerMethods.add(controllerMethod);
                     }
                 }
