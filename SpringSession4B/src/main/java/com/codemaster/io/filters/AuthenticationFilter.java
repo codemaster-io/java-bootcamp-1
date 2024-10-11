@@ -1,4 +1,4 @@
-package com.codemaster.io;
+package com.codemaster.io.filters;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;

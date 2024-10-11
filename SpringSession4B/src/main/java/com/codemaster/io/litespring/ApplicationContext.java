@@ -107,4 +107,8 @@ public class ApplicationContext {
     public Object getBean(String name) {
         return beanFactory.get(name);
     }
+
+    public boolean registerFilters() {
+
+    }
 }
