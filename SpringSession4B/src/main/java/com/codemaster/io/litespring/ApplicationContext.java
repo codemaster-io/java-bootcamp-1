@@ -4,6 +4,7 @@ import com.codemaster.io.litespring.annotation.Autowired;
 import com.codemaster.io.litespring.annotation.Component;
 import com.codemaster.io.litespring.annotation.RequestMapping;
 import com.codemaster.io.litespring.annotation.RestController;
+import jakarta.servlet.Filter;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -31,12 +32,14 @@ public class ApplicationContext {
         return applicationContext;
     }
 
-    protected void createSpringContainer(List<Class<?>> classes) {
+    protected void createSpringContainer(List<Class<?>> classes, List<Filter> filters) {
         try {
             beanCreates(classes);
             injectDependencies(classes);
             List<ControllerMethod> controllerMethods = findControllerMethods(classes);
             DispatcherServlet dispatcherServlet = new DispatcherServlet(controllerMethods);
+            tomCatConfig.addFilters(filters);
+            tomCatConfig.start();
             tomCatConfig.registerServlet(dispatcherServlet, dispatcherServlet.getClass().getSimpleName(), "/");
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -72,7 +75,6 @@ public class ApplicationContext {
                                         .instance(instance)
                                         .clz(clazz)
                                 .build();
-                        System.out.println("controllerMethod = " + controllerMethod);
                         controllerMethods.add(controllerMethod);
                     }
                 }
@@ -108,7 +110,8 @@ public class ApplicationContext {
         return beanFactory.get(name);
     }
 
-    public boolean registerFilters() {
-
+    public boolean addFilters(List<Filter> filters) {
+        tomCatConfig.addFilters(filters);
+        return true;
     }
 }

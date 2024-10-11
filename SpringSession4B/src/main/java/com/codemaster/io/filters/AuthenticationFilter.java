@@ -3,6 +3,7 @@ package com.codemaster.io.filters;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
@@ -16,17 +17,21 @@ public class AuthenticationFilter implements Filter {
             throws IOException, ServletException {
 
         System.out.println("DoFilter AuthenticationFilter");
-
+        chain.doFilter(request, response);
         HttpServletRequest httpRequest = (HttpServletRequest) request;
-        String token = httpRequest.getHeader("Authorization");
+        HttpSession session = httpRequest.getSession();
+        
 
-        if (token != null && token.equals("valid-token")) {
-            chain.doFilter(request, response);  // Pass the request along the chain
-        } else {
-            HttpServletResponse httpResponse = (HttpServletResponse) response;
-            httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED,
-                    "Unauthorized");
-        }
+//        HttpServletRequest httpRequest = (HttpServletRequest) request;
+//        String token = httpRequest.getHeader("Authorization");
+//
+//        if (token != null && token.equals("valid-token")) {
+//            chain.doFilter(request, response);  // Pass the request along the chain
+//        } else {
+//            HttpServletResponse httpResponse = (HttpServletResponse) response;
+//            httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED,
+//                    "Unauthorized");
+//        }
     }
 
     public void destroy() {

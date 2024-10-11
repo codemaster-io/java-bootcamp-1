@@ -2,6 +2,7 @@ package com.codemaster.io.litespring;
 
 
 import com.codemaster.io.litespring.annotation.PackageScan;
+import jakarta.servlet.Filter;
 
 import java.io.File;
 import java.net.URL;
@@ -11,6 +12,10 @@ import java.util.List;
 public class LiteSpringApplication {
 
     public static ApplicationContext run(Class<?> appClass) throws Exception {
+        return run(appClass, new ArrayList<>());
+    }
+
+    public static ApplicationContext run(Class<?> appClass, List<Filter> filters) throws Exception {
 
         ApplicationContext applicationContext = ApplicationContext.getInstance();
 
@@ -24,7 +29,7 @@ public class LiteSpringApplication {
             classes.addAll(ClassScanner.scan(new File(resource.getPath()), packageName));
         }
 
-        applicationContext.createSpringContainer(classes);
+        applicationContext.createSpringContainer(classes, filters);
 
         return applicationContext;
     }
