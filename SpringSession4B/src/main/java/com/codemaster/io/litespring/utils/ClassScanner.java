@@ -1,4 +1,4 @@
-package com.codemaster.io.litespring;
+package com.codemaster.io.litespring.utils;
 
 import java.io.File;
 import java.util.ArrayList;

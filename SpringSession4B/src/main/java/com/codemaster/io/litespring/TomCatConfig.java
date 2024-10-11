@@ -69,7 +69,7 @@ public class TomCatConfig {
             // Create filter mappings
             FilterMap filterMap = new FilterMap();
             filterMap.setFilterName(filter.getClass().getSimpleName());
-            filterMap.addURLPattern("/");
+            filterMap.addURLPattern("/*");
             context.addFilterMap(filterMap);
 
             System.out.println("filterMap = " + filterMap);

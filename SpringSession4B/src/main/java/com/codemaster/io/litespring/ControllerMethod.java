@@ -1,5 +1,6 @@
 package com.codemaster.io.litespring;
 
+import com.codemaster.io.litespring.enums.MethodType;
 import lombok.Builder;
 import lombok.Data;
 

@@ -1,6 +1,6 @@
 package com.codemaster.io.litespring.annotation;
 
-import com.codemaster.io.litespring.MethodType;
+import com.codemaster.io.litespring.enums.MethodType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

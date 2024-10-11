@@ -1,4 +1,4 @@
-package com.codemaster.io.litespring;
+package com.codemaster.io.litespring.enums;
 
 public enum MethodType {
     GET,

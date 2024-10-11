@@ -3,6 +3,8 @@ package com.codemaster.io.litespring;
 import com.codemaster.io.litespring.annotation.PathVariable;
 import com.codemaster.io.litespring.annotation.RequestBody;
 import com.codemaster.io.litespring.annotation.RequestParam;
+import com.codemaster.io.litespring.enums.MethodType;
+import com.codemaster.io.litespring.utils.PathExtractor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -12,6 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.lang.reflect.Parameter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +46,7 @@ public class DispatcherServlet extends HttpServlet {
         String requestPath = request.getRequestURI();
 
         for(ControllerMethod controllerMethod : controllerMethods) {
+            System.out.println("controllerMethod.getMappedUrl() = " + controllerMethod.getMappedUrl());
             if(!controllerMethod.getMethodType().equals(methodType)) continue;
 
             if(!PathExtractor.isMatchUrlPath(controllerMethod.getMappedUrl(), requestPath)) continue;
@@ -56,7 +60,10 @@ public class DispatcherServlet extends HttpServlet {
             response.setContentType("application/json");
             String jsonResponse = objectMapper.writeValueAsString(responseObject);
             response.getWriter().write(jsonResponse);
+
+            return;
         }
+//        send404Response(request, response);
     }
 
     private Object invokeMethod(
@@ -107,5 +114,22 @@ public class DispatcherServlet extends HttpServlet {
             }
         }
         return null;
+    }
+
+    private void send404Response(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setStatus(HttpServletResponse.SC_NOT_FOUND); // Set HTTP status to 404
+        response.setContentType("application/json"); // Set response content type to JSON
+
+        // Create a structured JSON response object
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("errorCode", "404");
+        errorResponse.put("message", "The requested URL was not found on this server.");
+        errorResponse.put("path", request.getRequestURI());
+        errorResponse.put("timestamp", System.currentTimeMillis()); // Add timestamp
+
+        // Convert the error response to JSON format
+        String jsonResponse = objectMapper.writeValueAsString(errorResponse); // Use ObjectMapper to convert to JSON
+
+        response.getWriter().write(jsonResponse); // Write JSON response to output
     }
 }

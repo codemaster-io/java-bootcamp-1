@@ -1,8 +1,8 @@
 package com.codemaster.io.controller;
 
 
-import com.codemaster.io.litespring.UserContext;
-import com.codemaster.io.litespring.MethodType;
+import com.codemaster.io.litespring.context.UserContext;
+import com.codemaster.io.litespring.enums.MethodType;
 import com.codemaster.io.litespring.annotation.*;
 import com.codemaster.io.models.Product;
 import com.codemaster.io.models.dto.AddProductRequest;

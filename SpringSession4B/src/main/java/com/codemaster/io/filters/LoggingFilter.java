@@ -12,10 +12,11 @@ public class LoggingFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response,
                          FilterChain chain)
             throws IOException, ServletException {
-        chain.doFilter(request, response);
-        System.out.println("DoFilter LoggingFilter");
+        System.out.println("Do LoggingFilter");
         System.out.println("Request received from: " + request.getRemoteAddr());
+
         chain.doFilter(request, response);  // Continue to next filter or servlet
+
         System.out.println("Response sent.");
     }
 }
