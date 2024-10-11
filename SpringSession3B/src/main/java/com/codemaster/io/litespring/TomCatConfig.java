@@ -58,22 +58,20 @@ public class TomCatConfig {
     private static void registerServlet(Class<?> clazz, String urlMapping) throws Exception {
         if (clazz.isAnnotationPresent(RestController.class)) {
             for (Method method : clazz.getDeclaredMethods()) {
-                if (method.isAnnotationPresent(ResponseBody.class)) {
-                    // Register a controller's method as a servlet for URL mapping
-                    Tomcat tomcat = new Tomcat();
-                    tomcat.addServlet("", clazz.getSimpleName(), new HttpServlet() {
-                        @Override
-                        protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-                            try {
-                                handleControllerPostRequest(req, resp, clazz, method);
-                            } catch (Exception e) {
-                                throw new IOException(e);
-                            }
+                // Register a controller's method as a servlet for URL mapping
+                Tomcat tomcat = new Tomcat();
+                tomcat.addServlet("", clazz.getSimpleName(), new HttpServlet() {
+                    @Override
+                    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+                        try {
+                            handleControllerPostRequest(req, resp, clazz, method);
+                        } catch (Exception e) {
+                            throw new IOException(e);
                         }
-                    });
-                    tomcat.addContext("", null).addServletMappingDecoded(urlMapping, clazz.getSimpleName());
-                }
-            }
+                    }
+                });
+                tomcat.addContext("", null).addServletMappingDecoded(urlMapping, clazz.getSimpleName());
+        }
         }
     }
 
@@ -96,11 +94,9 @@ public class TomCatConfig {
         Object returnValue = method.invoke(controller, requestBody);
 
         // Convert return object to JSON and write to the response if @ResponseBody is present
-        if (method.isAnnotationPresent(ResponseBody.class)) {
-            String jsonResponse = new ObjectMapper().writeValueAsString(returnValue);
-            resp.setContentType("application/json");
-            resp.getWriter().write(jsonResponse);
-        }
+        String jsonResponse = new ObjectMapper().writeValueAsString(returnValue);
+        resp.setContentType("application/json");
+        resp.getWriter().write(jsonResponse);
     }
 
 
@@ -119,12 +115,9 @@ public class TomCatConfig {
         // Call the method
         Object returnValue = method.invoke(controller, args);
 
-        // Convert the return object to JSON and send the response if annotated with @ResponseBody
-        if (method.isAnnotationPresent(ResponseBody.class)) {
-            String jsonResponse = new ObjectMapper().writeValueAsString(returnValue);
-            resp.setContentType("application/json");
-            resp.getWriter().write(jsonResponse);
-        }
+        String jsonResponse = new ObjectMapper().writeValueAsString(returnValue);
+        resp.setContentType("application/json");
+        resp.getWriter().write(jsonResponse);
     }
 
     private static Object[] resolveMethodArguments(
