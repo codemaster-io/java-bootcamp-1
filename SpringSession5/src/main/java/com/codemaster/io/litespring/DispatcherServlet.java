@@ -1,23 +1,18 @@
 package com.codemaster.io.litespring;
 
-import com.codemaster.io.litespring.annotation.Authenticated;
 import com.codemaster.io.litespring.annotation.PathVariable;
 import com.codemaster.io.litespring.annotation.RequestBody;
 import com.codemaster.io.litespring.annotation.RequestParam;
-import com.codemaster.io.litespring.context.UserContext;
 import com.codemaster.io.litespring.enums.MethodType;
 import com.codemaster.io.litespring.utils.PathExtractor;
-import com.codemaster.io.models.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.HashMap;
 import java.util.List;
@@ -79,14 +74,6 @@ public class DispatcherServlet extends HttpServlet {
             HttpServletRequest req, HttpServletResponse resp, ControllerMethod controllerMethod,
             Map<String, String> pathVariables, String body) {
         try {
-
-            Method method = controllerMethod.getMethod();
-            if(method.isAnnotationPresent(Authenticated.class)) {
-                Authenticated authenticated = method.getAnnotation(Authenticated.class);
-                boolean valid = authenticationVerify(authenticated.roles());
-                if(!valid) return null;
-            }
-
             Parameter[] parameters = controllerMethod.getMethod().getParameters();
             Object[] paramObjects = new Object[parameters.length];
 
@@ -120,16 +107,6 @@ public class DispatcherServlet extends HttpServlet {
         }
     }
 
-    private boolean authenticationVerify(String[] expectedRoles) {
-        User user = UserContext.getUserContext();
-        if(user != null) {
-            for(String expectedRole : expectedRoles) {
-                if(!user.getRoles().contains(expectedRole)) return false;
-            }
-        }
-        return true;
-    }
-
     private String readRequestBody(HttpServletRequest request, MethodType methodType) {
         if(methodType == MethodType.POST || methodType == MethodType.PUT) {
             try {
@@ -146,8 +123,6 @@ public class DispatcherServlet extends HttpServlet {
         }
         return null;
     }
-
-
 
     private void send404Response(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setStatus(HttpServletResponse.SC_NOT_FOUND); // Set HTTP status to 404

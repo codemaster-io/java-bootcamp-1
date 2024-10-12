@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddProductResponse {
-    private String id;
+public class LoginResponse {
+    private String sessionId;
 }

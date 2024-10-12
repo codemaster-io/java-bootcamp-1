@@ -1,5 +1,6 @@
 package com.codemaster.io.models.dto;
 
+import com.codemaster.io.models.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +10,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddProductResponse {
-    private String id;
+public class RegisterResponse {
+    private User user;
 }

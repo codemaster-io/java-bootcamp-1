@@ -9,7 +9,7 @@ public class SessionData {
     private String id;
     private long createdTime;
     private long lastLoginTime;
-    private String username;
+    private String name;
     private String ipAddress;
     private String country;
 }

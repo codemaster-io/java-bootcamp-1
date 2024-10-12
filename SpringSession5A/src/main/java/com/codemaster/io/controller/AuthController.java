@@ -5,26 +5,24 @@ import com.codemaster.io.litespring.context.UserContext;
 import com.codemaster.io.litespring.enums.MethodType;
 import com.codemaster.io.models.User;
 import com.codemaster.io.models.dto.DeleteResponse;
-import com.codemaster.io.models.dto.LoginRequest;
-import com.codemaster.io.models.dto.RegisterRequest;
+import com.codemaster.io.models.dto.LoginResponse;
 import com.codemaster.io.models.dto.RegisterResponse;
 import com.codemaster.io.service.AuthService;
-import com.codemaster.io.service.CustomHttpSession;
-import jakarta.servlet.http.HttpServletRequest;
+import com.codemaster.io.service.CustomSessionService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
 
 @RestController(url = "/api")
 public class AuthController {
+
     @Autowired
     private AuthService authService;
 
     @Autowired
-    private CustomHttpSession customHttpSession;
+    private CustomSessionService customSessionService;
 
     @RequestMapping(url = "/auth/register", type = MethodType.GET)
     public RegisterResponse register(@RequestParam("username") String username, @RequestParam("password") String password) {
@@ -35,33 +33,31 @@ public class AuthController {
                 .roles(Arrays.asList("ADMIN"))
                 .build();
 
-        user = authService.register(user);
-        RegisterResponse response = RegisterResponse.builder()
+        boolean success = authService.register(user);
+        if(success) return RegisterResponse.builder()
                 .user(user)
                 .build();
-        return response;
+
+        return RegisterResponse.builder().build();
     }
 
     @RequestMapping(url = "/auth/login", type = MethodType.GET)
-    public User login(@RequestParam("username") String username, @RequestParam("password") String password,
-                      HttpServletResponse response) {
-        User user = authService.signIn(username, password);
+    public LoginResponse login(@RequestParam("username") String username, @RequestParam("password") String password,
+                               HttpServletResponse response) {
+        User user = authService.login(username, password);
         if(user != null) {
             String sessionId = UUID.randomUUID().toString();
+            customSessionService.createSession(sessionId, username);
 
-            customHttpSession.createSession(sessionId, username, response);
+            return LoginResponse.builder()
+                    .sessionId(sessionId)
+                    .build();
         }
-
-        return user;
+        return null;
     }
 
     @RequestMapping(url = "/users/{id}", type = MethodType.GET)
     public User user(@PathVariable(value = "id")  String id) {
-        if(UserContext.getUserContext() != null) {
-            System.out.println("UserContext.getUserContext() = " + UserContext.getUserContext());
-            User user = authService.getUser(id);
-            return user;
-        }
         return User.builder().build();
     }
 
@@ -69,19 +65,28 @@ public class AuthController {
     public User selfUser() {
         System.out.println("UserContext.getUserContext() = " + UserContext.getUserContext());
         if(UserContext.getUserContext() != null) {
-            System.out.println("UserContext.getUserContext() = " + UserContext.getUserContext());
-            User user = authService.getUser(UserContext.getUserContext());
-            System.out.println("user = " + user);
-            return user;
+            return authService.getUser(UserContext.getUserContext().getUsername());
         }
-        return User.builder().build();
+        return null;
     }
 
-    @RequestMapping(url = "/user/self", type = MethodType.POST)
+    @Authenticated(roles = {"SUPER_ADMIN"})
+    @RequestMapping(url = "/user/self/delete", type = MethodType.GET)
     public DeleteResponse selfDelete() {
         System.out.println("Self Delete");
         if(UserContext.getUserContext() != null) {
-            boolean success = authService.deleteUser(UserContext.getUserContext());
+            boolean success = authService.deleteUser(UserContext.getUserContext().getUsername());
+            return DeleteResponse.builder()
+                    .success(success)
+                    .build();
+        }
+        return DeleteResponse.builder().build();
+    }
+
+    @RequestMapping(url = "/user/transfer", type = MethodType.GET)
+    public DeleteResponse selfDelete(@RequestParam("toUser") String toUser) {
+        if(UserContext.getUserContext() != null) {
+            boolean success = authService.deleteUser(UserContext.getUserContext().getUsername());
             return DeleteResponse.builder()
                     .success(success)
                     .build();

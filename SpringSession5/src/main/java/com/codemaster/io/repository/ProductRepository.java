@@ -1,15 +1,12 @@
 package com.codemaster.io.repository;
 
+import com.codemaster.io.litespring.annotation.Component;
 import com.codemaster.io.models.Product;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 @Component
 public class ProductRepository {
@@ -19,17 +16,7 @@ public class ProductRepository {
         productMap = new HashMap<>();
     }
 
-    @Value("${max.size}")
-    private int MAX_SIZE;
-
-    @PostConstruct
-    private void postConstruct() {
-        System.out.println("Post Construct call.");
-    }
-
     public boolean addProduct(Product product) {
-        if(productMap.size() >= MAX_SIZE) return false;
-
         if(productMap.containsKey(product.getId())) return false;
         productMap.put(product.getId(), product);
         return true;

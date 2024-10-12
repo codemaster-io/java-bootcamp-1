@@ -1,23 +1,20 @@
 package com.codemaster.io.filters;
 
-
 import com.codemaster.io.litespring.annotation.Autowired;
 import com.codemaster.io.litespring.annotation.Component;
 import com.codemaster.io.litespring.context.UserContext;
 import com.codemaster.io.models.SessionData;
-import com.codemaster.io.service.CustomSessionService;
+import com.codemaster.io.service.CustomHttpSession;
 import jakarta.servlet.*;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.io.IOException;
-
 
 @Component
 public class AuthenticationFilter implements Filter {
 
     @Autowired
-    private CustomSessionService customSessionService;
+    public CustomHttpSession customHttpSession;
 
     public void init(FilterConfig filterConfig) throws ServletException {
         System.out.println("Init AuthenticationFilter");
@@ -27,11 +24,14 @@ public class AuthenticationFilter implements Filter {
                          FilterChain chain)
             throws IOException, ServletException {
 
-        System.out.println("Do AuthenticationFilter");
 
         HttpServletRequest request = (HttpServletRequest) servletRequest;
 
-        customSessionService.findSessionAndSetContext(request);
+        SessionData sessionData = customHttpSession.findSession(request);
+
+        if(sessionData != null) {
+            UserContext.setUserContext(sessionData.getName());
+        }
 
         chain.doFilter(servletRequest, servletResponse);
 

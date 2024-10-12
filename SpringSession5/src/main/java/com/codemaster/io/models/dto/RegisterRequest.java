@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddProductResponse {
-    private String id;
+public class RegisterRequest {
+    private String username;
+    private String password;
+    private String role;
 }

@@ -1,20 +1,18 @@
 package com.codemaster.io.service;
 
+import com.codemaster.io.litespring.annotation.Autowired;
+import com.codemaster.io.litespring.annotation.Component;
 import com.codemaster.io.models.Product;
 import com.codemaster.io.repository.ProductRepository;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
-@Service
+@Component
 public class ProductService {
 
+    @Autowired
     private ProductRepository productRepository;
-
-    public ProductService(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
 
     public String addProduct(Product product) {
         String id = UUID.randomUUID().toString();

@@ -21,7 +21,6 @@ public class SecurityWebConfig {
     InMemoryUserDetailsManager inMemoryUserDetailsManager() {
         GrantedAuthority authority = new SimpleGrantedAuthority("ADMIN");
 
-
         UserDetails user1 = User.withUsername("forhad")
                 .password("test")
                 .roles("ADMIN")
@@ -43,7 +42,7 @@ public class SecurityWebConfig {
         httpSecurity.authorizeHttpRequests()
                 .antMatchers("/api/products").permitAll()
                 .antMatchers("/api/search").permitAll()
-                .antMatchers("/api/login").authenticated()
+                .antMatchers("/api/login").hasRole("ADMIN")
                 .anyRequest().permitAll();
 
         httpSecurity.csrf().ignoringAntMatchers("/api/*");

@@ -1,13 +1,15 @@
 package com.codemaster.io.litespring.context;
 
-public class UserContext {
-    private static ThreadLocal<String> userThreadLocal = new ThreadLocal<>();
+import com.codemaster.io.models.User;
 
-    public static void setUserContext(String username) {
-        userThreadLocal.set(username);
+public class UserContext {
+    private static ThreadLocal<User> userThreadLocal = new ThreadLocal<>();
+
+    public static void setUserContext(User user) {
+        userThreadLocal.set(user);
     }
 
-    public static String getUserContext() {
+    public static User getUserContext() {
         return userThreadLocal.get();
     }
 

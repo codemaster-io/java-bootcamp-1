@@ -16,9 +16,6 @@ public class MainApplication {
 
     public static void main(String[] args) throws Exception {
 
-        List<Filter> filterList = new ArrayList<>();
-        filterList.add(new AuthenticationFilter());
-        filterList.add(new LoggingFilter());
 
         ApplicationContext applicationContext = LiteSpringApplication.run(
                 MainApplication.class);

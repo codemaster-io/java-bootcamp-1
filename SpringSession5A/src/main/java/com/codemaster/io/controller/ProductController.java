@@ -5,6 +5,7 @@ import com.codemaster.io.litespring.annotation.*;
 import com.codemaster.io.litespring.context.UserContext;
 import com.codemaster.io.litespring.enums.MethodType;
 import com.codemaster.io.models.Product;
+import com.codemaster.io.models.User;
 import com.codemaster.io.models.dto.AddProductRequest;
 import com.codemaster.io.models.dto.AddProductResponse;
 import com.codemaster.io.service.ProductService;
@@ -22,9 +23,6 @@ public class ProductController {
         product.setName(request.getName());
 
         String id = productService.addProduct(product);
-
-        String ctx = UserContext.getUserContext();
-
 
         AddProductResponse addProductResponse = new AddProductResponse();
         addProductResponse.setId(id);

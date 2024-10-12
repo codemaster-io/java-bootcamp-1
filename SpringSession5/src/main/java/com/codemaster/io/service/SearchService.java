@@ -1,8 +1,9 @@
 package com.codemaster.io.service;
 
+
+import com.codemaster.io.litespring.annotation.Autowired;
+import com.codemaster.io.litespring.annotation.Component;
 import com.codemaster.io.models.Product;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,11 +11,8 @@ import java.util.List;
 @Component
 public class SearchService {
 
+    @Autowired
     private ProductService productService;
-
-    public SearchService(@Autowired ProductService productService) {
-        this.productService = productService;
-    }
 
     public List<Product> search(String name) {
         List<Product> filterProducts = new ArrayList<>();

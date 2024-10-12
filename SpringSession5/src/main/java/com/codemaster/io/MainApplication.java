@@ -1,18 +1,29 @@
 package com.codemaster.io;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
-import org.springframework.context.ApplicationContext;
+import com.codemaster.io.filters.AuthenticationFilter;
+import com.codemaster.io.filters.LoggingFilter;
+import com.codemaster.io.litespring.ApplicationContext;
+import com.codemaster.io.litespring.LiteSpringApplication;
+import com.codemaster.io.litespring.annotation.PackageScan;
+import jakarta.servlet.Filter;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
-@SpringBootApplication(scanBasePackages = {"com.codemaster.io"})
+@PackageScan(scanPackages = {"com.codemaster.io"})
 public class MainApplication {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
 
-        ApplicationContext ctx = SpringApplication.run(MainApplication.class);
+        List<Filter> filterList = new ArrayList<>();
+        filterList.add(new AuthenticationFilter());
+        filterList.add(new LoggingFilter());
+
+        ApplicationContext applicationContext = LiteSpringApplication.run(
+                MainApplication.class);
+
     }
 }
+
+
