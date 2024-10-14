@@ -66,6 +66,9 @@ public class DispatcherServlet extends HttpServlet {
 
             Object responseObject = invokeMethod(request, response, controllerMethod, pathVariables, body);
 
+            // response status already set by internally
+            if(response.getStatus() != HttpServletResponse.SC_OK) return;
+
             response.setContentType("application/json");
             String jsonResponse = objectMapper.writeValueAsString(responseObject);
             response.getWriter().write(jsonResponse);
@@ -83,8 +86,11 @@ public class DispatcherServlet extends HttpServlet {
             Method method = controllerMethod.getMethod();
             if(method.isAnnotationPresent(Authenticated.class)) {
                 Authenticated authenticated = method.getAnnotation(Authenticated.class);
-                boolean valid = authenticationVerify(authenticated.roles());
-                if(!valid) return null;
+                boolean validAccess = authenticationVerify(authenticated.roles());
+                if(!validAccess) {
+                    send401Response(req, resp);
+                    return null;
+                }
             }
 
             Parameter[] parameters = controllerMethod.getMethod().getParameters();
@@ -126,8 +132,9 @@ public class DispatcherServlet extends HttpServlet {
             for(String expectedRole : expectedRoles) {
                 if(!user.getRoles().contains(expectedRole)) return false;
             }
+            return true;
         }
-        return true;
+        return false;
     }
 
     private String readRequestBody(HttpServletRequest request, MethodType methodType) {
@@ -157,6 +164,23 @@ public class DispatcherServlet extends HttpServlet {
         Map<String, Object> errorResponse = new HashMap<>();
         errorResponse.put("errorCode", "404");
         errorResponse.put("message", "The requested URL was not found on this server.");
+        errorResponse.put("path", request.getRequestURI());
+        errorResponse.put("timestamp", System.currentTimeMillis()); // Add timestamp
+
+        // Convert the error response to JSON format
+        String jsonResponse = objectMapper.writeValueAsString(errorResponse); // Use ObjectMapper to convert to JSON
+
+        response.getWriter().write(jsonResponse); // Write JSON response to output
+    }
+
+    private void send401Response(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // Set HTTP status to 404
+        response.setContentType("application/json"); // Set response content type to JSON
+
+        // Create a structured JSON response object
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("errorCode", "401");
+        errorResponse.put("message", "You don't have permission to access.");
         errorResponse.put("path", request.getRequestURI());
         errorResponse.put("timestamp", System.currentTimeMillis()); // Add timestamp
 
