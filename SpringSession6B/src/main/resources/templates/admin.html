@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java Bootcamp - Admin</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f9fc;
+            text-align: center;
+        }
+        .navbar {
+            background-color: #e74c3c;
+            padding: 10px;
+        }
+        .navbar a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        h1 {
+            margin-top: 50px;
+            color: #333;
+        }
+        .content {
+            margin-top: 30px;
+            font-size: 18px;
+        }
+        .file-list {
+            margin-top: 20px;
+            display: inline-block;
+            text-align: left;
+        }
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+        }
+        .delete-icon {
+            cursor: pointer;
+            color: red;
+        }
+    </style>
+    <script>
+        // Function to trigger DELETE API when delete icon is clicked
+        function deleteFile(fileId) {
+            fetch(`/file/${fileId}`, {
+                method: 'DELETE'
+            })
+                .then(response => {
+                    if (response.ok) {
+                        document.getElementById('file-' + fileId).remove();
+                        alert('File deleted successfully!');
+                    } else {
+                        alert('Failed to delete file!');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+</head>
+<body>
+<div class="navbar">
+    <a href="/">Home</a>
+    <a href="/admin">Admin</a>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/user">User</a>
+
+    <!-- Display logged-in user's name and Logout button if authenticated -->
+    <span th:if="${username != null}">
+                 Logged in as: <b th:text="${username}"></b>
+    </span>
+    <a th:if="${username != null}" th:href="@{/logout}" class="button">Logout</a>
+    <a th:if="${username == null}" href="/login" class="button">Login</a>
+
+</div>
+
+<div class="content">
+    <h1>Admin Panel</h1>
+    <p>Manage your Bootcamp users and course content from here.</p>
+
+    <!-- File List Section -->
+    <div class="file-list">
+        <div class="file-item" id="file-1">
+            <span>SampleFile1.pdf</span>
+            <span class="delete-icon" onclick="deleteFile(1)">&#x1F5D1;</span>
+        </div>
+        <div class="file-item" id="file-2">
+            <span>SampleFile2.docx</span>
+            <span class="delete-icon" onclick="deleteFile(2)">&#x1F5D1;</span>
+        </div>
+    </div>
+</div>
+</body>
+</html>

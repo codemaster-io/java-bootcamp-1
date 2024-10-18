@@ -17,10 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserService {
     private UserRepository userRepository;
 
-    @Autowired
+//    @Autowired
     private PasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository) {
@@ -70,7 +70,7 @@ public class UserService implements UserDetailsService {
         return userRepository.getUsers();
     }
 
-    @Override
+//    @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.getUser(email);
 

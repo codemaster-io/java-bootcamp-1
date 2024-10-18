@@ -20,15 +20,17 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    public String home(Model model) {
-        model.addAttribute("products", productService.getAllProducts());
+    public String home() {
         return "index"; // This will point to index.html
     }
 
-    @GetMapping("/search")
-    public String search(@RequestParam(value = "query", required = false) String query, Model model) {
-        model.addAttribute("products", searchService.search(query));
-        model.addAttribute("query", query);
-        return "search";
+    @GetMapping("/dashboard")
+    public String dashboard() {
+        return "dashboard"; // This will point to index.html
+    }
+
+    @GetMapping("/admin")
+    public String search() {
+        return "admin";
     }
 }

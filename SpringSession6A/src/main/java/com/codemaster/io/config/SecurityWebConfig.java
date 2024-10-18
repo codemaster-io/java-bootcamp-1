@@ -18,6 +18,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,43 +32,48 @@ import org.springframework.stereotype.Component;
 @EnableWebSecurity(debug = true)
 public class SecurityWebConfig {
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private JwtAuthFilter jwtAuthFilter;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
+//    @Autowired
+//    private UserService userService;
+//
+//    @Autowired
+//    private JwtAuthFilter jwtAuthFilter;
+//
+//    @Autowired
+//    private PasswordEncoder passwordEncoder;
+//
     @Bean
-    InMemoryUserDetailsManager inMemoryUserDetailsManager() {
-        GrantedAuthority authority = new SimpleGrantedAuthority("ADMIN");
+    UserDetailsService inMemoryUserDetailsManager() {
 
-        UserDetails user1 = User.withUsername("forhad")
-                .password("test")
+        UserDetails admin = User.withUsername("admin@gmail.com")
+                .password("{noop}test123")
                 .roles("ADMIN")
+                .authorities(new SimpleGrantedAuthority("ADMIN_ALL_PERMISSION"))
                 .build();
 
-        InMemoryUserDetailsManager inMemoryDB = new InMemoryUserDetailsManager(user1);
+        UserDetails moderator = User.withUsername("moderator@gmail.com")
+                .password("{noop}test123")
+                .roles("MODERATOR")
+                .build();
+
+        InMemoryUserDetailsManager inMemoryDB = new InMemoryUserDetailsManager(admin, moderator);
 
         return inMemoryDB;
     }
-
-    @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-
-        authProvider.setUserDetailsService(inMemoryUserDetailsManager());
-        authProvider.setPasswordEncoder(passwordEncoder);
-
-        return authProvider;
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-        return authConfig.getAuthenticationManager();
-    }
+//
+//    @Bean
+//    public DaoAuthenticationProvider authenticationProvider() {
+//        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+//
+//        authProvider.setUserDetailsService(inMemoryUserDetailsManager());
+//        authProvider.setPasswordEncoder(passwordEncoder);
+//
+//        return authProvider;
+//    }
+//
+//    @Bean
+//    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+//        return authConfig.getAuthenticationManager();
+//    }
 
 
 
@@ -82,26 +88,31 @@ public class SecurityWebConfig {
 //        return new BCryptPasswordEncoder();
 //    }
 
-    @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-
-        httpSecurity.authorizeHttpRequests()
-                .antMatchers("/api/products").authenticated()
-                .antMatchers("/api/users").authenticated()
-                .antMatchers("/api/auth").permitAll()
-                .anyRequest().permitAll();
-
-        httpSecurity.csrf().ignoringAntMatchers("/api/*");
-        httpSecurity.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-        httpSecurity.authenticationProvider(authenticationProvider());
-        httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-//        httpSecurity.exceptionHandling().authenticationEntryPoint();
-//        httpSecurity.exceptionHandling().accessDeniedHandler();
-
-        httpSecurity.formLogin()
-                .loginPage("/loginpage");
-
-
-        return httpSecurity.build();
-    }
+//    @Bean
+//    SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+//
+//        httpSecurity.authorizeHttpRequests()
+////                .antMatchers("/api/products").authenticated()
+////                .antMatchers("/api/users").authenticated()
+////                .antMatchers("/api/auth").permitAll()
+////                .antMatchers("/").permitAll()
+//                .anyRequest().authenticated();
+//
+//        httpSecurity.httpBasic();
+//        httpSecurity.csrf().disable();
+//        httpSecurity.formLogin();
+//
+////        httpSecurity.csrf().ignoringAntMatchers("/api/*");
+////        httpSecurity.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+////        httpSecurity.authenticationProvider(authenticationProvider());
+////        httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+////        httpSecurity.exceptionHandling().authenticationEntryPoint();
+////        httpSecurity.exceptionHandling().accessDeniedHandler();
+//
+////        httpSecurity.formLogin()
+////                .loginPage("/loginpage");
+//
+//
+//        return httpSecurity.build();
+//    }
 }

@@ -48,12 +48,20 @@
     <a href="/">Home</a>
     <a href="/admin">Admin</a>
     <a href="/dashboard">Dashboard</a>
+    <a href="/user">User</a>
+
+    <!-- Display logged-in user's name and Logout button if authenticated -->
+    <span th:if="${username != null}">
+                 Logged in as: <b th:text="${username}"></b>
+    </span>
+    <a th:if="${username != null}" th:href="@{/logout}" class="button">Logout</a>
+    <a th:if="${username == null}" href="/login" class="button">Login</a>
+
 </div>
 
 <div class="hero">
-    <h1>Welcome to Java Bootcamp!</h1>
+    <h1>Home Page</h1>
     <p>Master Java Development in our Bootcamp. Start your journey now!</p>
-    <a href="/dashboard" class="button">Go to Dashboard</a>
 </div>
 </body>
 </html>
