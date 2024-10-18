@@ -7,15 +7,15 @@ import TopBar from '@/components/TopBar'
 import { useAuth } from '@/contexts/AuthContext'
 
 export default function DashboardLayout({children}: { children: React.ReactNode }) {
-    const { token, role } = useAuth()
+    const { token, role, userName } = useAuth()
     const router = useRouter()
 
     useEffect(() => {
+        console.log("username:", userName)
         if (!token) {
             router.push('/signin')
         }
     }, [token, router])
-
 
 
     return (

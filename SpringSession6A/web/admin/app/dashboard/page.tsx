@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
+import {router} from "next/client";
+import {useRouter} from "next/navigation";
 
 interface Product {
     id: number
@@ -20,10 +22,13 @@ export default function Dashboard() {
     const [lastProducts, setLastProducts] = useState<Product[]>([])
     const [lastUsers, setLastUsers] = useState<User[]>([])
     const { token, role, userName} = useAuth()
+    const router = useRouter()
 
 
     useEffect(() => {
         console.log("Username: ", userName)
+        console.log("token", token)
+        console.log("role", role)
 
         const fetchData = async () => {
             try {

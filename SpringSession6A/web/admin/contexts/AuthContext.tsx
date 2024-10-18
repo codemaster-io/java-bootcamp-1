@@ -63,6 +63,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 localStorage.setItem('token', data.token)
                 const decodedToken = JSON.parse(atob(data.token.split('.')[1]))
                 setRole(decodedToken.role)
+                setUserName(decodedToken.userName)
                 return true
             }
             return false
