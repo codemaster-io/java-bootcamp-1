@@ -4,6 +4,8 @@ import com.codemaster.io.models.User;
 import com.codemaster.io.models.dto.DeleteResponse;
 import com.codemaster.io.models.dto.UsersListResponse;
 import com.codemaster.io.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -14,6 +16,9 @@ import java.util.List;
 public class UserController {
 
     private UserService userService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public UserController(UserService userService) {
         this.userService = userService;

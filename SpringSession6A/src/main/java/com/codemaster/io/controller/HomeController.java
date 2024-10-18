@@ -29,6 +29,6 @@ public class HomeController {
     public String search(@RequestParam(value = "query", required = false) String query, Model model) {
         model.addAttribute("products", searchService.search(query));
         model.addAttribute("query", query);
-        return "search"; // This will point to search.html
+        return "search";
     }
 }
