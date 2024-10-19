@@ -4,11 +4,8 @@ import com.codemaster.io.models.User;
 import com.codemaster.io.models.dto.DeleteResponse;
 import com.codemaster.io.models.dto.UsersListResponse;
 import com.codemaster.io.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -21,12 +18,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/{userId}")
-    public User getUser(@PathVariable int userId) {
-        User user = userService.getUserById(userId);
-        return user;
-    }
-
     @GetMapping("/")
     public UsersListResponse getAllUsers() {
         List<User> users = userService.getAllUsers();
@@ -34,6 +25,12 @@ public class UserController {
                 .users(users)
                 .build();
         return response;
+    }
+
+    @GetMapping("/{userId}")
+    public User getUser(@PathVariable int userId) {
+        User user = userService.getUserById(userId);
+        return user;
     }
 
     @PostMapping("/")
@@ -59,12 +56,4 @@ public class UserController {
 
         return response;
     }
-
-    @GetMapping("/self")
-    public User selfUser(Principal principal) {
-        String email = principal.getName();
-        return userService.getUserByEmail(email);
-    }
-
-
 }

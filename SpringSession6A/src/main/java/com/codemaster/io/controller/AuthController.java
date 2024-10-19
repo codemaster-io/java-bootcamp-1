@@ -6,23 +6,28 @@ import com.codemaster.io.models.dto.SignUpRequest;
 import com.codemaster.io.models.dto.SignUpResponse;
 import com.codemaster.io.service.AuthService;
 import com.codemaster.io.service.UserService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
+import java.util.Map;
 
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+    @Autowired
     private AuthService authService;
+
+    @Autowired
     private UserService userService;
 
-    public AuthController(AuthService authService, UserService userService) {
-        this.authService = authService;
-        this.userService = userService;
-    }
-
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @PostMapping( "/register")
     public SignUpResponse signUp(@RequestBody SignUpRequest request) {
@@ -46,6 +51,14 @@ public class AuthController {
 
     @PostMapping( "/login")
     public SignUpResponse signIn(@RequestBody SignInRequest request) {
+        Authentication authentication;
+        try {
+            authentication = authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+        } catch (AuthenticationException exception) {
+            throw exception;
+        }
+
         User user = authService.signIn(request.getEmail(), request.getPassword());
         String token = "";
         if(user != null) {
@@ -57,5 +70,11 @@ public class AuthController {
                 .token(token)
                 .build();
         return response;
+    }
+
+    @GetMapping("/user")
+    public User selfUser(Principal principal) {
+        String email = principal.getName();
+        return userService.getUserByEmail(email);
     }
 }

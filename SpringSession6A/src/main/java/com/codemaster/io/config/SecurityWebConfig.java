@@ -4,115 +4,113 @@ import com.codemaster.io.filters.JwtAuthFilter;
 import com.codemaster.io.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 
 @Component
 @EnableWebSecurity(debug = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true) // Enable method-level security
 public class SecurityWebConfig {
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private JwtAuthFilter jwtAuthFilter;
+
 //    @Autowired
-//    private UserService userService;
-//
-//    @Autowired
-//    private JwtAuthFilter jwtAuthFilter;
-//
-//    @Autowired
-//    private PasswordEncoder passwordEncoder;
-//
-    @Bean
-    UserDetailsService inMemoryUserDetailsManager() {
+//    private CustomAuthenticationProvider customAuthenticationProvider;
 
-        UserDetails admin = User.withUsername("admin@gmail.com")
-                .password("{noop}test123")
-                .roles("ADMIN")
-                .authorities(new SimpleGrantedAuthority("ADMIN_ALL_PERMISSION"))
-                .build();
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-        UserDetails moderator = User.withUsername("moderator@gmail.com")
-                .password("{noop}test123")
-                .roles("MODERATOR")
-                .build();
 
-        InMemoryUserDetailsManager inMemoryDB = new InMemoryUserDetailsManager(admin, moderator);
-
-        return inMemoryDB;
-    }
-//
 //    @Bean
-//    public DaoAuthenticationProvider authenticationProvider() {
-//        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-//
-//        authProvider.setUserDetailsService(inMemoryUserDetailsManager());
-//        authProvider.setPasswordEncoder(passwordEncoder);
-//
-//        return authProvider;
+//    public AuthenticationProvider daoAuthenticationProvider() {
+//        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+//        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
+//        daoAuthenticationProvider.setUserDetailsService(userService);
+//        return daoAuthenticationProvider;
 //    }
-//
+
+    // Configure AuthenticationManager to use the custom provider
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
+    }
+
+//    @Bean
+//    public AuthenticationManager authenticationManager() {
+//        return new ProviderManager(Arrays.asList(customAuthenticationProvider, daoAuthenticationProvider()));
+//    }
+
 //    @Bean
 //    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
 //        return authConfig.getAuthenticationManager();
 //    }
 
-
-
 //    @Bean
-//    PasswordEncoder passwordEncoder() {
-//        return NoOpPasswordEncoder.getInstance();
-//    }
+//    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+//        AuthenticationManager authenticationManager = authenticationConfiguration.getAuthenticationManager();
 //
+//        // Check if it's a ProviderManager (common default implementation)
+//        if (authenticationManager instanceof ProviderManager) {
+//            ProviderManager providerManager = (ProviderManager) authenticationManager;
+//
+//            // Retrieve all AuthenticationProviders
+//            List<AuthenticationProvider> providers = providerManager.getProviders();
+//
+//            // Log all AuthenticationProviders
+//            providers.forEach(provider -> {
+//                System.out.println("provider.getClass().getName() = " + provider.getClass().getName());
+////                logger.info("Authentication Provider: " + provider.getClass().getName());
+//            });
+//        }
+//
+//        return authenticationManager;
+//    }
 
-//    @Bean
-//    public BCryptPasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
+    @Bean
+    SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 
-//    @Bean
-//    SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-//
-//        httpSecurity.authorizeHttpRequests()
-////                .antMatchers("/api/products").authenticated()
-////                .antMatchers("/api/users").authenticated()
-////                .antMatchers("/api/auth").permitAll()
-////                .antMatchers("/").permitAll()
-//                .anyRequest().authenticated();
-//
-//        httpSecurity.httpBasic();
-//        httpSecurity.csrf().disable();
-//        httpSecurity.formLogin();
-//
-////        httpSecurity.csrf().ignoringAntMatchers("/api/*");
-////        httpSecurity.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-////        httpSecurity.authenticationProvider(authenticationProvider());
-////        httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-////        httpSecurity.exceptionHandling().authenticationEntryPoint();
-////        httpSecurity.exceptionHandling().accessDeniedHandler();
-//
-////        httpSecurity.formLogin()
-////                .loginPage("/loginpage");
-//
-//
-//        return httpSecurity.build();
-//    }
+        httpSecurity.authorizeHttpRequests()
+//                .antMatchers("/api/products").authenticated()
+//                .antMatchers("/api/users").authenticated()
+//                .antMatchers("/api/auth").permitAll()
+//                .antMatchers("/").permitAll()
+                .anyRequest().authenticated();
+
+        httpSecurity.httpBasic();
+        httpSecurity.csrf().disable();
+        httpSecurity.formLogin();
+
+//        httpSecurity.csrf().ignoringAntMatchers("/api/*");
+//        httpSecurity.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+//        httpSecurity.authenticationProvider(authenticationProvider());
+//        httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+//        httpSecurity.exceptionHandling().authenticationEntryPoint();
+//        httpSecurity.exceptionHandling().accessDeniedHandler();
+
+//        httpSecurity.formLogin()
+//                .loginPage("/loginpage");
+
+
+        return httpSecurity.build();
+    }
 }
