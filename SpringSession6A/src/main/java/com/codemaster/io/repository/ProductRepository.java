@@ -19,17 +19,13 @@ public class ProductRepository {
         productMap = new HashMap<>();
     }
 
-    @Value("${max.size}")
-    private int MAX_SIZE;
-
     @PostConstruct
     private void postConstruct() {
         System.out.println("Post Construct call.");
     }
 
     public boolean addProduct(Product product) {
-        if(productMap.size() >= MAX_SIZE) return false;
-
+        System.out.println("product.getId() = " + product.getId());
         if(productMap.containsKey(product.getId())) return false;
         productMap.put(product.getId(), product);
         return true;

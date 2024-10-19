@@ -1,14 +1,13 @@
 package com.codemaster.io.config;
 
 import com.codemaster.io.filters.JwtAuthFilter;
+import com.codemaster.io.provider.CustomAuthenticationProvider;
 import com.codemaster.io.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,10 +15,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.stereotype.Component;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 
 @Component
@@ -33,58 +28,24 @@ public class SecurityWebConfig {
     @Autowired
     private JwtAuthFilter jwtAuthFilter;
 
-//    @Autowired
-//    private CustomAuthenticationProvider customAuthenticationProvider;
+    @Autowired
+    private CustomAuthenticationProvider customAuthenticationProvider;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-
-//    @Bean
-//    public AuthenticationProvider daoAuthenticationProvider() {
-//        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-//        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
-//        daoAuthenticationProvider.setUserDetailsService(userService);
-//        return daoAuthenticationProvider;
-//    }
-
-    // Configure AuthenticationManager to use the custom provider
+    @Bean
+    public AuthenticationProvider daoAuthenticationProvider() {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
+        daoAuthenticationProvider.setUserDetailsService(userService);
+        return daoAuthenticationProvider;
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
-
-//    @Bean
-//    public AuthenticationManager authenticationManager() {
-//        return new ProviderManager(Arrays.asList(customAuthenticationProvider, daoAuthenticationProvider()));
-//    }
-
-//    @Bean
-//    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-//        return authConfig.getAuthenticationManager();
-//    }
-
-//    @Bean
-//    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-//        AuthenticationManager authenticationManager = authenticationConfiguration.getAuthenticationManager();
-//
-//        // Check if it's a ProviderManager (common default implementation)
-//        if (authenticationManager instanceof ProviderManager) {
-//            ProviderManager providerManager = (ProviderManager) authenticationManager;
-//
-//            // Retrieve all AuthenticationProviders
-//            List<AuthenticationProvider> providers = providerManager.getProviders();
-//
-//            // Log all AuthenticationProviders
-//            providers.forEach(provider -> {
-//                System.out.println("provider.getClass().getName() = " + provider.getClass().getName());
-////                logger.info("Authentication Provider: " + provider.getClass().getName());
-//            });
-//        }
-//
-//        return authenticationManager;
-//    }
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -94,11 +55,11 @@ public class SecurityWebConfig {
 //                .antMatchers("/api/users").authenticated()
 //                .antMatchers("/api/auth").permitAll()
 //                .antMatchers("/").permitAll()
-                .anyRequest().authenticated();
+                .anyRequest().permitAll();
 
-        httpSecurity.httpBasic();
+//        httpSecurity.httpBasic();
         httpSecurity.csrf().disable();
-        httpSecurity.formLogin();
+//        httpSecurity.formLogin();
 
 //        httpSecurity.csrf().ignoringAntMatchers("/api/*");
 //        httpSecurity.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

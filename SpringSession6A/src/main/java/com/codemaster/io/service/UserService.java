@@ -28,13 +28,16 @@ public class UserService implements UserDetailsService {
     }
 
     public int addUser(User user) {
-        int id = userRepository.getUsers().size() + 1;
+        int id = (int) (System.currentTimeMillis()/1000);
         String passHash = passwordEncoder.encode(user.getPassword());
+        System.out.println("passHash = " + passHash);
+
         user = user.toBuilder()
                 .id(id)
                 .password(passHash)
                 .build();
         boolean success = userRepository.addUser(user);
+        System.out.println("success = " + success);
         if(success) return id;
         return -1;
     }

@@ -21,7 +21,7 @@ public class ProductController {
         this.searchService = searchService;
     }
 
-    @GetMapping( "/")
+    @GetMapping
     public AllProductsResponse allProducts() {
         List<Product> products = productService.getAllProducts();
         AllProductsResponse response = AllProductsResponse.builder()
@@ -30,17 +30,19 @@ public class ProductController {
         return response;
     }
 
-    @PostMapping( "/")
+    @PostMapping
     public Product addProduct(@RequestBody Product product) {
-        return productService.addProduct(product);
+        Product responseProduct = productService.addProduct(product);
+        System.out.println("responseProduct = " + responseProduct);
+        return responseProduct;
     }
 
-    @PutMapping( "/")
+    @PutMapping()
     public Product updateProduct(@RequestBody Product product) {
         return productService.updateProduct(product);
     }
 
-    @DeleteMapping( "/")
+    @DeleteMapping("/{productId}")
     public DeleteResponse deleteProduct(@PathVariable int productId) {
         boolean success = productService.deleteProduct(productId);
         DeleteResponse response = DeleteResponse.builder()

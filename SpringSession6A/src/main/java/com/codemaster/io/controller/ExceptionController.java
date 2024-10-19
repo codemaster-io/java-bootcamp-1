@@ -24,6 +24,7 @@ public class ExceptionController {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleAnyException(
             Exception ex, HttpServletRequest req) {
+        ex.printStackTrace();
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setStatus(HttpStatus.NOT_FOUND.value());
         errorResponse.setMessage("An unexpected error occurred:");

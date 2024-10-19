@@ -1,23 +1,21 @@
-package com.codemaster.io.models;
+package com.codemaster.io.models.dto;
 
+import com.codemaster.io.models.Permission;
+import com.codemaster.io.models.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.ToString;
 
 import java.util.List;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder(toBuilder = true)
-public class User {
-    private int id;
-
+public class AddUserRequest {
     private String name;
 
     private String email;
 
-    @ToString.Exclude
-    @JsonIgnore
     private String password;
 
     private Role role;

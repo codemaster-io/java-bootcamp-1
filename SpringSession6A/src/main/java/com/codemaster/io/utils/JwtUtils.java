@@ -1,5 +1,6 @@
 package com.codemaster.io.utils;
 
+import com.codemaster.io.models.Permission;
 import com.codemaster.io.models.Role;
 import com.codemaster.io.models.User;
 import io.jsonwebtoken.*;
@@ -13,7 +14,9 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtUtils {
@@ -36,13 +39,20 @@ public class JwtUtils {
     }
 
     public String generateTokenFromUser(User user) {
-        return Jwts.builder()
-                .subject(user.getEmail())
-                .claim("role", user.getRole().toString())
-                .issuedAt(new Date())
-                .expiration(new Date((new Date()).getTime() + jwtExpirationMs))
-                .signWith(key())
-                .compact();
+        try {
+            return Jwts.builder()
+                    .subject(user.getEmail())
+                    .claim("role", user.getRole().toString())
+                    .claim("permissions", user.getPermissions().stream()
+                            .map(Permission::getDescription).collect(Collectors.toList()))
+                    .issuedAt(new Date())
+                    .expiration(new Date((new Date()).getTime() + jwtExpirationMs))
+                    .signWith(key())
+                    .compact();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
     }
 
     public String getEmailFromJwtToken(String token) {

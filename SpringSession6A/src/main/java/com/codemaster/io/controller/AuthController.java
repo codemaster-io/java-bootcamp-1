@@ -1,20 +1,16 @@
 package com.codemaster.io.controller;
 
+import com.codemaster.io.models.Permission;
 import com.codemaster.io.models.User;
-import com.codemaster.io.models.dto.SignInRequest;
-import com.codemaster.io.models.dto.SignUpRequest;
-import com.codemaster.io.models.dto.SignUpResponse;
+import com.codemaster.io.models.dto.*;
 import com.codemaster.io.service.AuthService;
 import com.codemaster.io.service.UserService;
+import com.codemaster.io.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -27,9 +23,36 @@ public class AuthController {
     private UserService userService;
 
     @Autowired
-    private AuthenticationManager authenticationManager;
+    private JwtUtils jwtUtils;
 
-    @PostMapping( "/register")
+    @PostMapping( "/login")
+    public SignInResponse signIn(@RequestBody SignInRequest request) {
+
+        System.out.println("request.getEmail() = " + request.getEmail());
+        boolean isAuthenticated = authService.passwordMatch(request.getEmail(), request.getPassword());
+        User user = User.builder().build();
+        String token = "";
+
+        System.out.println("isAuthenticated = " + isAuthenticated);
+
+        if(isAuthenticated) {
+            user = userService.getUserByEmail(request.getEmail());
+            token = jwtUtils.generateTokenFromUser(user);
+            System.out.println("token = " + token);
+        }
+
+        return SignInResponse.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .name(user.getName())
+                .role(user.getRole().toString())
+                .permissions(user.getPermissions().stream()
+                        .map(Permission::toString).collect(Collectors.toList()))
+                .token(token)
+                .build();
+    }
+
+    @PostMapping( "/signup")
     public SignUpResponse signUp(@RequestBody SignUpRequest request) {
         User user = User.builder()
                 .name(request.getName())
@@ -49,27 +72,10 @@ public class AuthController {
         return response;
     }
 
-    @PostMapping( "/login")
-    public SignUpResponse signIn(@RequestBody SignInRequest request) {
-        Authentication authentication;
-        try {
-            authentication = authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-        } catch (AuthenticationException exception) {
-            throw exception;
-        }
-
-        User user = authService.signIn(request.getEmail(), request.getPassword());
-        String token = "";
-        if(user != null) {
-            token = "Generated token";
-        }
-
-        SignUpResponse response = SignUpResponse.builder()
-                .user(user)
-                .token(token)
-                .build();
-        return response;
+    @PostMapping("/change-password")
+    public ChangePasswordResponse changePassword(@RequestBody ChangePasswordRequest request,
+            Principal requestedUser) {
+        return null;
     }
 
     @GetMapping("/user")

@@ -19,6 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.stereotype.Component;
 
@@ -64,6 +65,11 @@ public class SecurityWebConfig {
 //                .authorities("ROLE_ADMIN", "ADMIN:READ_PERMISSION")
 //                .build();
 
+        // For example JDBCUserDetailsManager for persisting
+        // Which is required data source
+        //JdbcUserDetailsManager manager = new JdbcUserDetailsManager();
+        //manager.setDataSource(dataSource);
+
         InMemoryUserDetailsManager inMemoryDB = new InMemoryUserDetailsManager(
                 user, admin, moderator, adminViewer);
 
@@ -77,6 +83,8 @@ public class SecurityWebConfig {
 
 //    @Bean
 //    public AuthenticationProvider authenticationProvider() {
+
+
 //        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
 //        provider.setUserDetailsService(inMemoryUserDetailsManager());
 //        provider.setPasswordEncoder(passwordEncoder());

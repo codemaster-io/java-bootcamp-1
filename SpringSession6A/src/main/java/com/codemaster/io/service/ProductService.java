@@ -17,11 +17,12 @@ public class ProductService {
     }
 
     public Product addProduct(Product product) {
-        int id = productRepository.getProducts().size()+1;
+        int id = (int) (System.currentTimeMillis()/1000);
         product = product.toBuilder()
                 .id(id)
                 .build();
         boolean success = productRepository.addProduct(product);
+        System.out.println("success = " + success);
         if(success) return product;
         return null;
     }

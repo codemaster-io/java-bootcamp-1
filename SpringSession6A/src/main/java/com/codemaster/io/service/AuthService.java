@@ -1,21 +1,34 @@
 package com.codemaster.io.service;
 
 import com.codemaster.io.models.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AuthService {
     private UserService userService;
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
     private AuthService(UserService userService) {
         this.userService = userService;
     }
 
-    public User signIn(String email, String password) {
-        User user = userService.getUserByEmail(email);
-        if(user == null) return null;
-        if(user.getPassword().equals(password)) return user;
-        return null;
+    public boolean passwordMatch(String email, String password) {
+        Authentication authentication;
+        try {
+            authentication = authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(email, password));
+            return authentication.isAuthenticated();
+        } catch (AuthenticationException exception) {
+            exception.printStackTrace();
+        }
+        return false;
     }
 
     public int signup(User user) {
