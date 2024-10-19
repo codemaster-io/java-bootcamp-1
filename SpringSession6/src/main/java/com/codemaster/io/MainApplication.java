@@ -36,15 +36,15 @@ public class MainApplication {
         return (args) -> {
             // Insert some sample users
             User admin = User.builder()
-                    .name("Admin User")
-                    .email("admin@gmail.com")
+                    .name("Forhad Ahmed")
+                    .email("forhad@gmail.com")
                     .password("1234")
                     .role(Role.ADMIN)
                     .permissions(Arrays.asList(Permission.ADMIN_ALL_PERMISSION))
                     .build();
             User moderator = User.builder()
-                    .name("Moderator User ")
-                    .email("moderator@gmail.com")
+                    .name("Yaseen ")
+                    .email("yaseen@gmail.com")
                     .password("1234")
                     .role(Role.MODERATOR)
                     .permissions(Arrays.asList(Permission.MODERATOR_ALL_PERMISSION))

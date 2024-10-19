@@ -1,5 +1,6 @@
 package com.codemaster.io.config;
 
+import com.codemaster.io.filters.JwtAuthFilter;
 import com.codemaster.io.provider.CustomAuthenticationProvider;
 import com.codemaster.io.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,8 @@ public class SecurityWebConfig {
     @Autowired
     private UserService userService;
 
-//    @Autowired
-//    private JwtAuthFilter jwtAuthFilter;
+    @Autowired
+    private JwtAuthFilter jwtAuthFilter;
 
     @Autowired
     private CustomAuthenticationProvider customAuthenticationProvider;
@@ -52,7 +53,8 @@ public class SecurityWebConfig {
         httpSecurity.authorizeHttpRequests()
 //                .antMatchers("/api/products").authenticated()
 //                .antMatchers("/api/users").authenticated()
-//                .antMatchers("/api/auth/signin", "/api/auth/signup").permitAll()
+//                .antMatchers("/api/auth").permitAll()
+//                .antMatchers("/").permitAll()
                 .anyRequest().permitAll();
 
 //        httpSecurity.httpBasic();
