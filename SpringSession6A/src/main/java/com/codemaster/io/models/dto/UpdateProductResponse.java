@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @Builder(toBuilder = true)
-public class AddProductResponse {
+public class UpdateProductResponse {
     private Product product;
     private boolean success;
 }

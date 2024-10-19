@@ -12,8 +12,10 @@ export default function Profile() {
 
     useEffect(() => {
         const fetchProfile = async () => {
+            const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+
             try {
-                const response = await fetch('/api/users/profile', {
+                const response = await fetch(`${baseUrl}/api/auth/user`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 })
                 const data = await response.json()

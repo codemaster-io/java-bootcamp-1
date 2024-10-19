@@ -37,8 +37,10 @@ export default function Users() {
 
     useEffect(() => {
         const fetchUsers = async () => {
+            const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+
             try {
-                const response = await fetch(`/api/users?page=${currentPage}&limit=10`, {
+                const response = await fetch(`${baseUrl}/api/users`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 })
                 const data = await response.json()
@@ -56,8 +58,9 @@ export default function Users() {
 
     const handleAddUser = async (newUser: Omit<User, 'id'>) => {try {
             console.log("AddUser: ", newUser)
+        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
 
-            const response = await fetch('/api/users', {
+        const response = await fetch(`${baseUrl}/api/users`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -66,8 +69,8 @@ export default function Users() {
                 body: JSON.stringify(newUser)
             })
             if (response.ok) {
-                const addedUser = await response.json()
-                setUsers(prevUsers => [...prevUsers, addedUser])
+                const data = await response.json()
+                setUsers(prevUsers => [...prevUsers, data.user])
                 setIsAddingUser(false)
                 setNewUser({ name: '', email: '', password: '', role: 'USER', permissions: [] })
             } else {
@@ -80,8 +83,9 @@ export default function Users() {
 
     const handleEditUser = async (editedUser: Omit<User, 'id'>) => {try {
             if (!editingUser) return
+            const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
 
-            const response = await fetch(`/api/users`, {
+            const response = await fetch(`${baseUrl}/api/users`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -90,8 +94,8 @@ export default function Users() {
                 body: JSON.stringify(editingUser)
             })
             if (response.ok) {
-                const updatedUser = await response.json()
-                setUsers(users.map(user => user.id === updatedUser.id ? updatedUser : user))
+                const data = await response.json()
+                setUsers(users.map(user => user.id === data.user.id ? data.user : user))
                 setIsEditingUser(false)
                 setEditingUser(null)
             } else {
@@ -104,8 +108,10 @@ export default function Users() {
 
     const handleDeleteUser = async (userId: number) => {
         if (window.confirm('Are you sure you want to delete this user?')) {
+            const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+
             try {
-                const response = await fetch(`/api/users?id=${userId}`, {
+                const response = await fetch(`${baseUrl}/api/users/${userId}`, {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${token}` }
                 })

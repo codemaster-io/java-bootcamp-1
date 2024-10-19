@@ -11,8 +11,10 @@ export default function ProductDetails() {
 
     useEffect(() => {
         const fetchProduct = async () => {
+            const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+
             try {
-                const response = await fetch(`/api/products/${id}`, {
+                const response = await fetch(`${baseUrl}/api/products/${id}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 })
                 const data = await response.json()

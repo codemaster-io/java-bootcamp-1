@@ -59,6 +59,7 @@ public class SecurityWebConfig {
 
 //        httpSecurity.httpBasic();
         httpSecurity.csrf().disable();
+        httpSecurity.cors().disable();
 //        httpSecurity.formLogin();
 
 //        httpSecurity.csrf().ignoringAntMatchers("/api/*");

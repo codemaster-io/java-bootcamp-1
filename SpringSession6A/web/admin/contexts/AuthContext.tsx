@@ -27,11 +27,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             try {
                 const storedToken = localStorage.getItem('token')
                 if (storedToken) {
+                    setRole(localStorage.getItem('role'))
+                    setUserName(localStorage.getItem('name'))
                     setToken(storedToken)
-                    const decodedToken = JSON.parse(atob(storedToken.split('.')[1]))
-                    console.log("decoded token: ", decodedToken)
-                    setRole(decodedToken.role)
-                    setUserName(decodedToken.userName)
                 }
             } catch (error) {
                 console.error('Error initializing auth:', error)
@@ -46,8 +44,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }, [])
 
     const login = async (email: string, password: string): Promise<boolean> => {
+        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';  // Default to an empty string if not set
+
         try {
-            const response = await fetch('/api/auth/signin', {
+            const response = await fetch(`${baseUrl}/api/auth/signin`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
@@ -60,10 +60,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             const data = await response.json()
             if (data.token) {
                 setToken(data.token)
+                setRole(data.role)
+                setUserName(data.name)
+
                 localStorage.setItem('token', data.token)
-                const decodedToken = JSON.parse(atob(data.token.split('.')[1]))
-                setRole(decodedToken.role)
-                setUserName(decodedToken.userName)
+                localStorage.setItem('role', data.role)
+                localStorage.setItem('name', data.name)
+
                 return true
             }
             return false
@@ -74,8 +77,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     const signup = async (userData: { name: string; email: string; password: string }): Promise<boolean> => {
+        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';  // Default to an empty string if not set
+
         try {
-            const response = await fetch('/api/auth/signup', {
+            const response = await fetch(`${baseUrl}/api/auth/signup`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(userData),

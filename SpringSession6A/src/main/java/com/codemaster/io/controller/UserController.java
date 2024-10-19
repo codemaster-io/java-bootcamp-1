@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
+@CrossOrigin(origins = "*")
 public class UserController {
 
     private UserService userService;
@@ -42,7 +43,7 @@ public class UserController {
                 .permissions(req.getPermissions())
                 .build();
 
-        int id = userService.addUser(user);
+        long id = userService.addUser(user);
         AddUserResponse response = AddUserResponse.builder().build();
 
         if (id != -1) {
@@ -77,7 +78,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
-    public DeleteResponse deleteUser(@PathVariable int userId) {
+    public DeleteResponse deleteUser(@PathVariable long userId) {
         boolean success = userService.deleteUserById(userId);
         DeleteResponse response = DeleteResponse.builder()
                 .success(success)

@@ -31,7 +31,7 @@ public class AuthService {
         return false;
     }
 
-    public int signup(User user) {
+    public long signup(User user) {
         return userService.addUser(user);
     }
 

@@ -42,7 +42,10 @@ public class JwtUtils {
         try {
             return Jwts.builder()
                     .subject(user.getEmail())
-                    .claim("role", user.getRole().toString())
+                    .claim("id", user.getId())
+                    .claim("name", user.getName())
+                    .claim("email", user.getEmail())
+                    .claim("role", user.getRole())
                     .claim("permissions", user.getPermissions().stream()
                             .map(Permission::getDescription).collect(Collectors.toList()))
                     .issuedAt(new Date())

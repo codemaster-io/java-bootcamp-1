@@ -11,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
+@CrossOrigin(origins = "*")
 public class ProductController {
 
     private ProductService productService;
@@ -31,19 +32,39 @@ public class ProductController {
     }
 
     @PostMapping
-    public Product addProduct(@RequestBody Product product) {
+    public AddProductResponse addProduct(@RequestBody AddProductRequest req) {
+        Product product = Product.builder()
+                .name(req.getName())
+                .description(req.getDescription())
+                .price(req.getPrice())
+                .build();
         Product responseProduct = productService.addProduct(product);
+        AddProductResponse response = AddProductResponse.builder()
+                .product(responseProduct)
+                .success(responseProduct != null)
+                .build();
         System.out.println("responseProduct = " + responseProduct);
-        return responseProduct;
+        return response;
     }
 
     @PutMapping()
-    public Product updateProduct(@RequestBody Product product) {
-        return productService.updateProduct(product);
+    public UpdateProductResponse updateProduct(@RequestBody UpdateProductRequest request) {
+        Product product = Product.builder()
+                .id(request.getId())
+                .name(request.getName())
+                .price(request.getPrice())
+                .description(request.getDescription())
+                .build();
+        Product updateProduct = productService.updateProduct(product);
+        UpdateProductResponse response = UpdateProductResponse.builder()
+                .product(updateProduct)
+                .success(updateProduct != null)
+                .build();
+        return response;
     }
 
     @DeleteMapping("/{productId}")
-    public DeleteResponse deleteProduct(@PathVariable int productId) {
+    public DeleteResponse deleteProduct(@PathVariable long productId) {
         boolean success = productService.deleteProduct(productId);
         DeleteResponse response = DeleteResponse.builder()
                 .success(success)
@@ -52,7 +73,7 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public Product getProduct(@PathVariable int productId) {
+    public Product getProduct(@PathVariable long productId) {
         System.out.println("productId = " + productId);
         return productService.getProduct(productId);
     }

@@ -10,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder(toBuilder = true)
 public class User {
-    private int id;
+    private long id;
 
     private String name;
 

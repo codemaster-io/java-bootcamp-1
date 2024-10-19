@@ -17,7 +17,8 @@ public class ProductService {
     }
 
     public Product addProduct(Product product) {
-        int id = (int) (System.currentTimeMillis()/1000);
+        long id = System.currentTimeMillis();
+
         product = product.toBuilder()
                 .id(id)
                 .build();
@@ -36,11 +37,11 @@ public class ProductService {
         return null;
     }
 
-    public boolean deleteProduct(int productId) {
+    public boolean deleteProduct(long productId) {
         return productRepository.deleteProduct(productId);
     }
 
-    public Product getProduct(int id) {
+    public Product getProduct(long id) {
         return productRepository.getProduct(id);
     }
 

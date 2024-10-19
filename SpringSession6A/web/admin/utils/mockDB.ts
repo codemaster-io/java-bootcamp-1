@@ -1,6 +1,6 @@
 import { sign, verify } from 'jsonwebtoken'
 
-const SECRET_KEY = 'your-secret-jwt-key'
+const SECRET_KEY = '3245jljlfjladfuu7293845k3245jljlfjladfuu7293845k'
 
 interface User {
     id: number

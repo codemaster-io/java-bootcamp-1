@@ -31,14 +31,16 @@ export default function Dashboard() {
         console.log("role", role)
 
         const fetchData = async () => {
+            const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+
             try {
-                const productsResponse = await fetch('/api/products?limit=10', {
+                const productsResponse = await fetch(`${baseUrl}/api/products?limit=10`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 })
                 const productsData = await productsResponse.json()
                 setLastProducts(productsData.products)
 
-                const usersResponse = await fetch('/api/users?limit=10', {
+                const usersResponse = await fetch(`${baseUrl}/api/users?limit=10`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 })
                 const usersData = await usersResponse.json()

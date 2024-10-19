@@ -1,20 +1,14 @@
-package com.codemaster.io.models;
+package com.codemaster.io.models.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder(toBuilder = true)
-public class Product {
+public class UpdateProductRequest {
     private long id;
-
     private String name;
-
     private double price;
-
     private String description;
 }
+

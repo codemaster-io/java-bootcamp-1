@@ -27,8 +27,8 @@ public class UserService implements UserDetailsService {
         this.userRepository = userRepository;
     }
 
-    public int addUser(User user) {
-        int id = (int) (System.currentTimeMillis()/1000);
+    public long addUser(User user) {
+        long id = System.currentTimeMillis();
         String passHash = passwordEncoder.encode(user.getPassword());
         System.out.println("passHash = " + passHash);
 
@@ -56,14 +56,14 @@ public class UserService implements UserDetailsService {
         return userRepository.getUser(email);
     }
 
-    public User getUserById(int id) {
+    public User getUserById(long id) {
         for(User user : userRepository.getUsers()) {
             if(user.getId() == id) return user;
         }
         return null;
     }
 
-    public boolean deleteUserById(int id) {
+    public boolean deleteUserById(long id) {
         User user = getUserById(id);
         if(user != null) return userRepository.deleteUser(user.getEmail());
         return false;

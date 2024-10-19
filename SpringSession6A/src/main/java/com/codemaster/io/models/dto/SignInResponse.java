@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @Builder(toBuilder = true)
 public class SignInResponse {
-    private int id;
+    private long id;
     private String name;
     private String email;
     private String role;

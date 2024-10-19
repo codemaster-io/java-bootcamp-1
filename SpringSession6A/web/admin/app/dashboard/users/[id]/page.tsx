@@ -17,8 +17,10 @@ export default function UserDetails() {
 
     useEffect(() => {
         const fetchUser = async () => {
+            const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+
             try {
-                const response = await fetch(`/api/users/${id}`, {
+                const response = await fetch(`${baseUrl}/api/users/${id}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 })
                 const data = await response.json()

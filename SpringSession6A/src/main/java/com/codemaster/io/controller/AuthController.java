@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth")
+@CrossOrigin(origins = "*")
 public class AuthController {
     @Autowired
     private AuthService authService;
@@ -25,7 +26,7 @@ public class AuthController {
     @Autowired
     private JwtUtils jwtUtils;
 
-    @PostMapping( "/login")
+    @PostMapping( "/signin")
     public SignInResponse signIn(@RequestBody SignInRequest request) {
 
         System.out.println("request.getEmail() = " + request.getEmail());
@@ -59,7 +60,7 @@ public class AuthController {
                 .email(request.getEmail())
                 .password(request.getPassword())
                 .build();
-        int id = authService.signup(user);
+        long id = authService.signup(user);
         String token = "";
         if(id != -1) {
             user = userService.getUserById(id);

@@ -26,8 +26,10 @@ export default function Products() {
 
     useEffect(() => {
         const fetchProducts = async () => {
+            const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+
             try {
-                const response = await fetch(`/api/products?page=${currentPage}&limit=10`, {
+                const response = await fetch(`${baseUrl}/api/products`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 })
                 const data = await response.json()
@@ -45,8 +47,10 @@ export default function Products() {
 
     const handleAddProduct = async (e: React.FormEvent) => {
         e.preventDefault()
+        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+
         try {
-            const response = await fetch('/api/products', {
+            const response = await fetch(`${baseUrl}/api/products`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -58,8 +62,8 @@ export default function Products() {
                 })
             })
             if (response.ok) {
-                const addedProduct = await response.json()
-                setProducts(prevProducts => [...prevProducts, addedProduct])
+                const data = await response.json()
+                setProducts(prevProducts => [...prevProducts, data.product])
                 setIsAddingProduct(false)
                 setNewProduct({ name: '', price: '', description: '' })
             } else {
@@ -73,9 +77,10 @@ export default function Products() {
     const handleEditProduct = async (e: React.FormEvent) => {
         e.preventDefault()
         if (!editingProduct) return
+        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
 
         try {
-            const response = await fetch(`/api/products`, {
+            const response = await fetch(`${baseUrl}/api/products`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -87,8 +92,8 @@ export default function Products() {
                 })
             })
             if (response.ok) {
-                const updatedProduct = await response.json()
-                setProducts(products.map(product => product.id === updatedProduct.id ? updatedProduct : product))
+                const data = await response.json()
+                setProducts(products.map(product => product.id === data.product.id ? data.product : product))
                 setIsEditingProduct(false)
                 setEditingProduct(null)
             } else {
@@ -101,8 +106,10 @@ export default function Products() {
 
     const handleDeleteProduct = async (productId: number) => {
         if (window.confirm('Are you sure you want to delete this product?')) {
+            const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+
             try {
-                const response = await fetch(`/api/products?id=${productId}`, {
+                const response = await fetch(`${baseUrl}/api/products/${productId}`, {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${token}` }
                 })
@@ -192,7 +199,7 @@ export default function Products() {
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 <Link href={`/dashboard/products/${product.id}`} className="text-blue-600 hover:text-blue-800 hover:underline">
-                                    ${product.price.toFixed(2)}
+                                    ${product.price}
                                 </Link>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">

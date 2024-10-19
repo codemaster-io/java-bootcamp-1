@@ -13,7 +13,7 @@ import java.util.Map;
 
 @Component
 public class ProductRepository {
-    private Map<Integer, Product> productMap;
+    private Map<Long, Product> productMap;
 
     public ProductRepository() {
         productMap = new HashMap<>();
@@ -25,13 +25,12 @@ public class ProductRepository {
     }
 
     public boolean addProduct(Product product) {
-        System.out.println("product.getId() = " + product.getId());
         if(productMap.containsKey(product.getId())) return false;
         productMap.put(product.getId(), product);
         return true;
     }
 
-    public boolean deleteProduct(int productId) {
+    public boolean deleteProduct(long productId) {
         if(productMap.containsKey(productId)) {
             productMap.remove(productId);
             return true;
@@ -39,7 +38,7 @@ public class ProductRepository {
         return false;
     }
 
-    public Product getProduct(int productId) {
+    public Product getProduct(long productId) {
         return productMap.get(productId);
     }
 

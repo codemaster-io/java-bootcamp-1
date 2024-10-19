@@ -7,7 +7,7 @@ interface User {
     name: string
     email: string
     password: string
-    role: 'USER' | 'ADMIN' | 'MANAGER'
+    role: 'USER' | 'ADMIN' | 'MODERATOR'
     permissions: string[]
 }
 
@@ -19,8 +19,8 @@ interface AddUserModalProps {
 
 const rolePermissions = {
     USER: [],
-    ADMIN: ['ADMIN:READ_PERMISSION', 'ADMIN:WRITE_PERMISSION'],
-    MANAGER: ['MANAGER:READ_PERMISSION', 'MANAGER:WRITE_PERMISSION'],
+    ADMIN: ['ADMIN:READ_PERMISSION', 'ADMIN:ALL_PERMISSION'],
+    MODERATOR: ['MODERATOR:READ_PERMISSION', 'MODERATOR:ALL_PERMISSION'],
 }
 
 export function AddUserModal({ isOpen, onClose, onAddUser }: AddUserModalProps) {
@@ -96,7 +96,7 @@ export function AddUserModal({ isOpen, onClose, onAddUser }: AddUserModalProps) 
                     >
                         <option value="USER">User</option>
                         <option value="ADMIN">Admin</option>
-                        <option value="MANAGER">Manager</option>
+                        <option value="MODERATOR">Moderator</option>
                     </select>
                 </div>
                 {newUser.role !== 'USER' && (
