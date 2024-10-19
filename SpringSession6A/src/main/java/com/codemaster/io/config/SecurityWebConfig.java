@@ -1,5 +1,7 @@
 package com.codemaster.io.config;
 
+import com.codemaster.io.filters.AuthException;
+import com.codemaster.io.filters.JwtAuthFilter;
 import com.codemaster.io.provider.CustomAuthenticationProvider;
 import com.codemaster.io.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +13,10 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 
 
@@ -24,8 +28,8 @@ public class SecurityWebConfig {
     @Autowired
     private UserService userService;
 
-//    @Autowired
-//    private JwtAuthFilter jwtAuthFilter;
+    @Autowired
+    private JwtAuthFilter jwtAuthFilter;
 
     @Autowired
     private CustomAuthenticationProvider customAuthenticationProvider;
@@ -50,26 +54,16 @@ public class SecurityWebConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 
         httpSecurity.authorizeHttpRequests()
-//                .antMatchers("/api/products").authenticated()
-//                .antMatchers("/api/users").authenticated()
-//                .antMatchers("/api/auth/signin", "/api/auth/signup").permitAll()
+                .antMatchers("/api/auth/signin", "/api/auth/signup").permitAll()
+                .antMatchers("/api/**").authenticated()
                 .anyRequest().permitAll();
 
-//        httpSecurity.httpBasic();
+
         httpSecurity.csrf().disable();
-        httpSecurity.cors().disable();
-//        httpSecurity.formLogin();
-
-//        httpSecurity.csrf().ignoringAntMatchers("/api/*");
-//        httpSecurity.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-//        httpSecurity.authenticationProvider(authenticationProvider());
-//        httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-//        httpSecurity.exceptionHandling().authenticationEntryPoint();
+//        httpSecurity.csrf().ignoringAntMatchers("/api/**");
+        httpSecurity.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+        httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 //        httpSecurity.exceptionHandling().accessDeniedHandler();
-
-//        httpSecurity.formLogin()
-//                .loginPage("/loginpage");
-
 
         return httpSecurity.build();
     }

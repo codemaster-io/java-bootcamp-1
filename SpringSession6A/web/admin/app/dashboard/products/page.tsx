@@ -27,7 +27,7 @@ export default function Products() {
     useEffect(() => {
         const fetchProducts = async () => {
             const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
-
+            console.log("token: ", token)
             try {
                 const response = await fetch(`${baseUrl}/api/products`, {
                     headers: { 'Authorization': `Bearer ${token}` }
@@ -214,14 +214,6 @@ export default function Products() {
                     </tbody>
                 </table>
             </div>
-            {/*<div className="flex justify-between">*/}
-            {/*    <Button onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>*/}
-            {/*        Previous*/}
-            {/*    </Button>*/}
-            {/*    <Button onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage === totalPages}>*/}
-            {/*        Next*/}
-            {/*    </Button>*/}
-            {/*</div>*/}
         </div>
     )
 }

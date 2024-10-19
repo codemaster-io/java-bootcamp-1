@@ -165,69 +165,6 @@ export default function Users() {
                 user={editingUser}
             />
 
-            {/*<Modal isOpen={isEditingUser} onClose={() => setIsEditingUser(false)} title="Edit User">*/}
-            {/*    {editingUser && (*/}
-            {/*        <form onSubmit={handleEditUser} className="space-y-4">*/}
-            {/*            <Input*/}
-            {/*                label="Name"*/}
-            {/*                value={editingUser.name}*/}
-            {/*                onChange={(e) => setEditingUser({ ...editingUser, name: e.target.value })}*/}
-            {/*                required*/}
-            {/*            />*/}
-            {/*            <Input*/}
-            {/*                label="Email"*/}
-            {/*                type="email"*/}
-            {/*                value={editingUser.email}*/}
-            {/*                onChange={(e) => setEditingUser({ ...editingUser, email: e.target.value })}*/}
-            {/*                required*/}
-            {/*            />*/}
-            {/*            <div>*/}
-            {/*                <label className="block text-sm font-medium text-gray-700">Role</label>*/}
-            {/*                <select*/}
-            {/*                    value={editingUser.role}*/}
-            {/*                    onChange={(e) => setEditingUser({ ...editingUser, role: e.target.value })}*/}
-            {/*                    className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"*/}
-            {/*                >*/}
-            {/*                    <option value="user">User</option>*/}
-            {/*                    <option value="admin">Admin</option>*/}
-            {/*                </select>*/}
-            {/*            </div>*/}
-            {/*            <div>*/}
-            {/*                <label className="block text-sm font-medium text-gray-700">Permissions</label>*/}
-            {/*                <div className="mt-2 space-y-2">*/}
-            {/*                    <label className="inline-flex items-center">*/}
-            {/*                        <input*/}
-            {/*                            type="checkbox"*/}
-            {/*                            className="form-checkbox"*/}
-            {/*                            checked={editingUser.permissions.includes('add_user')}*/}
-            {/*                            onChange={() => handleTogglePermission('add_user')}*/}
-            {/*                        />*/}
-            {/*                        <span className="ml-2">Permit to add User</span>*/}
-            {/*                    </label>*/}
-            {/*                    <label className="inline-flex items-center">*/}
-            {/*                        <input*/}
-            {/*                            type="checkbox"*/}
-            {/*                            className="form-checkbox"*/}
-            {/*                            checked={editingUser.permissions.includes('remove_user')}*/}
-            {/*                            onChange={() => handleTogglePermission('remove_user')}*/}
-            {/*                        />*/}
-            {/*                        <span className="ml-2">Permit to remove User</span>*/}
-            {/*                    </label>*/}
-            {/*                    <label className="inline-flex items-center">*/}
-            {/*                        <input*/}
-            {/*                            type="checkbox"*/}
-            {/*                            className="form-checkbox"*/}
-            {/*                            checked={editingUser.permissions.includes('read_write')}*/}
-            {/*                            onChange={() => handleTogglePermission('read_write')}*/}
-            {/*                        />*/}
-            {/*                        <span className="ml-2">Permit read/write operation</span>*/}
-            {/*                    </label>*/}
-            {/*                </div>*/}
-            {/*            </div>*/}
-            {/*            <Button type="submit">Update User</Button>*/}
-            {/*        </form>*/}
-            {/*    )}*/}
-            {/*</Modal>*/}
             <div className="bg-white shadow overflow-hidden sm:rounded-lg">
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
@@ -266,14 +203,6 @@ export default function Users() {
                     </tbody>
                 </table>
             </div>
-            {/*<div className="flex justify-between">*/}
-            {/*    <Button onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>*/}
-            {/*        Previous*/}
-            {/*    </Button>*/}
-            {/*    <Button onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage === totalPages}>*/}
-            {/*        Next*/}
-            {/*    </Button>*/}
-            {/*</div>*/}
         </div>
     )
 }
