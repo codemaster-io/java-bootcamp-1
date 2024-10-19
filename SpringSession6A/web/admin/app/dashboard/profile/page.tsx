@@ -6,7 +6,7 @@ import { Button } from '@/components/Button'
 import { Input } from '@/components/Input'
 
 export default function Profile() {
-    const [user, setUser] = useState({ name: '', email: '', role: '' })
+    const [user, setUser] = useState({ name: '', email: '', role: '', permissions: [] })
     const [isEditing, setIsEditing] = useState(false)
     const { token } = useAuth()
 
@@ -99,6 +99,11 @@ export default function Profile() {
                         <div>
                             <label className="block text-sm font-medium text-gray-700">Role</label>
                             <p className="mt-1 text-sm text-gray-900">{user.role}</p>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">Permissions</label>
+                            <p className="mt-1 text-sm text-gray-900">{user.permissions}</p>
                         </div>
                         <div className="flex justify-end">
                             <Button onClick={() => setIsEditing(true)}>Edit Profile</Button>
