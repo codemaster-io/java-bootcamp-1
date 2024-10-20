@@ -19,16 +19,16 @@ public class AuthService {
         this.userService = userService;
     }
 
-    public boolean passwordMatch(String email, String password) {
+    public Authentication passwordMatch(String email, String password) {
         Authentication authentication;
         try {
             authentication = authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(email, password));
-            return authentication.isAuthenticated();
+            return authentication;
         } catch (AuthenticationException exception) {
             exception.printStackTrace();
         }
-        return false;
+        return null;
     }
 
     public long signup(User user) {

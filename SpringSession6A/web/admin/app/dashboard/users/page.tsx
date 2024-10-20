@@ -41,6 +41,7 @@ export default function Users() {
 
             try {
                 const response = await fetch(`${baseUrl}/api/users`, {
+                    method: 'GET',
                     headers: { 'Authorization': `Bearer ${token}` }
                 })
                 const data = await response.json()

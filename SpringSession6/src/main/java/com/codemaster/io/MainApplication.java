@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Bean;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 
 @SpringBootApplication(scanBasePackages = {"com.codemaster.io"})
@@ -36,18 +37,18 @@ public class MainApplication {
         return (args) -> {
             // Insert some sample users
             User admin = User.builder()
-                    .name("Forhad Ahmed")
-                    .email("forhad@gmail.com")
+                    .name("Admin User")
+                    .email("admin@gmail.com")
                     .password("1234")
                     .role(Role.ADMIN)
-                    .permissions(Arrays.asList(Permission.ADMIN_ALL_PERMISSION))
+                    .permissions(List.of(Permission.ADMIN_ALL_PERMISSION))
                     .build();
             User moderator = User.builder()
-                    .name("Yaseen ")
-                    .email("yaseen@gmail.com")
+                    .name("Moderator User ")
+                    .email("moderator@gmail.com")
                     .password("1234")
                     .role(Role.MODERATOR)
-                    .permissions(Arrays.asList(Permission.MODERATOR_ALL_PERMISSION))
+                    .permissions(List.of(Permission.MODERATOR_ALL_PERMISSION))
                     .build();
 
             userService.addUser(admin);

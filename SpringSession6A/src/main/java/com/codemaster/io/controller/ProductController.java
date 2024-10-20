@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
-@CrossOrigin(origins = "*")
 public class ProductController {
 
     private ProductService productService;
@@ -26,6 +26,7 @@ public class ProductController {
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'MODERATOR')")
     public AllProductsResponse allProducts() {
+        System.out.println("All Products.");
         List<Product> products = productService.getAllProducts();
         AllProductsResponse response = AllProductsResponse.builder()
                 .products(products)

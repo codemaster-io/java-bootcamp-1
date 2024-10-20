@@ -30,6 +30,7 @@ export default function Products() {
             console.log("token: ", token)
             try {
                 const response = await fetch(`${baseUrl}/api/products`, {
+                    method: 'GET',
                     headers: { 'Authorization': `Bearer ${token}` }
                 })
                 const data = await response.json()

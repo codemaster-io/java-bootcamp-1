@@ -78,6 +78,8 @@ public class UserService implements UserDetailsService {
         User user = userRepository.getUser(email);
 
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().toString()));
+
         for(Permission permission : user.getPermissions()) {
             grantedAuthorities.add(new SimpleGrantedAuthority(permission.toString()));
         }
@@ -85,7 +87,6 @@ public class UserService implements UserDetailsService {
         UserDetails userDetails = org.springframework.security.core.userdetails.User
                     .withUsername(user.getEmail())
                 .password(user.getPassword())
-                .roles(user.getRole().toString())
                 .authorities(grantedAuthorities)
                 .build();
         return userDetails;

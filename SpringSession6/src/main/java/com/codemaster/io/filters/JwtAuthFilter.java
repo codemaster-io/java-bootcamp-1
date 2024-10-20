@@ -1,10 +1,7 @@
 package com.codemaster.io.filters;
 
-
 import com.codemaster.io.service.UserService;
 import com.codemaster.io.utils.JwtUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,7 +24,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Autowired
     private UserService userService;
 
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -47,7 +43,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 System.out.println("userDetails.getAuthorities() = " + userDetails.getAuthorities());
                 System.out.println("authentication.isAuthenticated() = " + authentication.isAuthenticated());
 
-//                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                // Additional information like IP address, Session id to store in authentication object.
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }

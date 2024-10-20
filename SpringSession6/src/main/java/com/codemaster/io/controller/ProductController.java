@@ -5,6 +5,7 @@ import com.codemaster.io.models.dto.*;
 import com.codemaster.io.service.ProductService;
 import com.codemaster.io.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class ProductController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'MODERATOR')")
     public AllProductsResponse allProducts() {
         List<Product> products = productService.getAllProducts();
         AllProductsResponse response = AllProductsResponse.builder()
@@ -32,6 +34,7 @@ public class ProductController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'MODERATOR')")
     public AddProductResponse addProduct(@RequestBody AddProductRequest req) {
         Product product = Product.builder()
                 .name(req.getName())
@@ -48,6 +51,7 @@ public class ProductController {
     }
 
     @PutMapping()
+    @PreAuthorize("hasAnyRole('ADMIN', 'MODERATOR')")
     public UpdateProductResponse updateProduct(@RequestBody UpdateProductRequest request) {
         Product product = Product.builder()
                 .id(request.getId())
@@ -64,6 +68,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{productId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MODERATOR')")
     public DeleteResponse deleteProduct(@PathVariable long productId) {
         boolean success = productService.deleteProduct(productId);
         DeleteResponse response = DeleteResponse.builder()
@@ -73,12 +78,14 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MODERATOR')")
     public Product getProduct(@PathVariable long productId) {
         System.out.println("productId = " + productId);
         return productService.getProduct(productId);
     }
 
     @GetMapping("/search")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MODERATOR')")
     public SearchResponse searchProducts(@RequestParam(required = true) String query) {
         System.out.println("query = " + query);
         List<Product> products = searchService.search(query);
