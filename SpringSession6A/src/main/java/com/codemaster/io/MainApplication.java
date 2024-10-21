@@ -60,12 +60,14 @@ public class MainApplication {
                     .name("iPhone 14")
                     .price(800.0)
                     .description("A product from Apple")
+                    .addedByUserEmail(admin.getEmail())
                     .build();
 
             Product product2 = Product.builder()
                     .name("Pixel 5")
                     .price(700)
                     .description("A product from Google")
+                    .addedByUserEmail(moderator.getEmail())
                     .build();
 
             // Insert some sample products

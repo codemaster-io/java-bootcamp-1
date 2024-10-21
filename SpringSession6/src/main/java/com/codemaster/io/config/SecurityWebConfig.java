@@ -1,8 +1,5 @@
 package com.codemaster.io.config;
 
-import com.codemaster.io.filters.AuthException;
-import com.codemaster.io.filters.JwtAuthFilter;
-import com.codemaster.io.provider.CustomAuthenticationProvider;
 import com.codemaster.io.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +13,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 
 
@@ -29,42 +25,39 @@ public class SecurityWebConfig {
     private UserService userService;
 
     @Autowired
-    private JwtAuthFilter jwtAuthFilter;
-
-    @Autowired
-    private CustomAuthenticationProvider customAuthenticationProvider;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
-
-    @Bean
-    public AuthenticationProvider daoAuthenticationProvider() {
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
-        daoAuthenticationProvider.setUserDetailsService(userService);
-        return daoAuthenticationProvider;
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-        return authConfig.getAuthenticationManager();
-    }
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 
         httpSecurity.authorizeHttpRequests()
-                .antMatchers("/api/auth/signin", "/api/auth/signup").permitAll()
-                .antMatchers("/api/**").authenticated()
                 .anyRequest().permitAll();
 
+        httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         httpSecurity.csrf().disable();
-//        httpSecurity.csrf().ignoringAntMatchers("/api/**");
-        httpSecurity.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-        httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-//        httpSecurity.exceptionHandling().accessDeniedHandler();
 
         return httpSecurity.build();
+    }
+
+//    @Bean
+//    public AuthenticationProvider authenticationProvider() {
+//        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+//        daoAuthenticationProvider.setUserDetailsService(userService);
+//        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
+//        return daoAuthenticationProvider;
+//    }
+//
+//    @Bean
+//    public AuthenticationProvider authenticationProvider1() {
+//        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+//        daoAuthenticationProvider.setUserDetailsService(userService);
+//        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
+//        return daoAuthenticationProvider;
+//    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 }

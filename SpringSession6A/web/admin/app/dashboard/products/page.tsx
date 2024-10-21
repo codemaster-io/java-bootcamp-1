@@ -12,6 +12,7 @@ interface Product {
     name: string
     price: number
     description: string
+    addedByUserEmail: string
 }
 
 export default function Products() {
@@ -186,6 +187,7 @@ export default function Products() {
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">AddedBy</th>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                     </tr>
                     </thead>
@@ -203,6 +205,13 @@ export default function Products() {
                                     ${product.price}
                                 </Link>
                             </td>
+
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <Link href={`/dashboard/products/${product.id}`} className="text-blue-600 hover:text-blue-800 hover:underline">
+                                    {product.addedByUserEmail}
+                                </Link>
+                            </td>
+
                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <Button variant="secondary" size="sm" onClick={() => {
                                     setEditingProduct(product)

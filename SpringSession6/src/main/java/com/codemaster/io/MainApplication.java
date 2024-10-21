@@ -13,7 +13,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -24,12 +23,6 @@ public class MainApplication {
 
         ApplicationContext ctx = SpringApplication.run(MainApplication.class);
 
-//        Map<String, AuthenticationProvider> providers = ctx.getBeansOfType(AuthenticationProvider.class);
-//
-//        System.out.println("Registered AuthenticationProviders:");
-//        providers.forEach((name, provider) -> {
-//            System.out.println("Provider Bean Name: " + name + ", Provider Class: " + provider.getClass().getName());
-//        });
     }
 
     @Bean
@@ -60,12 +53,14 @@ public class MainApplication {
                     .name("iPhone 14")
                     .price(800.0)
                     .description("A product from Apple")
+                    .createdByUserEmail(admin.getEmail())
                     .build();
 
             Product product2 = Product.builder()
                     .name("Pixel 5")
                     .price(700)
                     .description("A product from Google")
+                    .createdByUserEmail(moderator.getEmail())
                     .build();
 
             // Insert some sample products

@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserService implements UserDetailsService{
     private UserRepository userRepository;
 
     @Autowired
@@ -31,20 +31,18 @@ public class UserService implements UserDetailsService {
         long id = System.currentTimeMillis();
         String passHash = passwordEncoder.encode(user.getPassword());
         System.out.println("passHash = " + passHash);
-
         user = user.toBuilder()
                 .id(id)
                 .password(passHash)
                 .build();
         boolean success = userRepository.addUser(user);
-        System.out.println("success = " + success);
         if(success) return id;
         return -1;
     }
 
     public boolean updateUser(User user) {
         userRepository.deleteUser(user.getEmail());
-        String passHash = passwordEncoder.encode(user.getPassword());
+        String passHash = user.getPassword();
         user = user.toBuilder()
                 .password(passHash)
                 .build();
@@ -75,18 +73,18 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.getUser(email);
+        User user = getUserByEmail(email);
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().toString()));
 
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
         for(Permission permission : user.getPermissions()) {
-            grantedAuthorities.add(new SimpleGrantedAuthority(permission.toString()));
+            authorities.add(new SimpleGrantedAuthority(permission.toString()));
         }
 
-        UserDetails userDetails = org.springframework.security.core.userdetails.User
-                    .withUsername(user.getEmail())
+        UserDetails userDetails =  org.springframework.security.core.userdetails.User
+                .withUsername(email)
                 .password(user.getPassword())
-                .roles(user.getRole().toString())
-                .authorities(grantedAuthorities)
+                .authorities(authorities)
                 .build();
         return userDetails;
     }

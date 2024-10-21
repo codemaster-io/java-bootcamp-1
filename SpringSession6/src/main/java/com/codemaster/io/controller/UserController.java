@@ -10,7 +10,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins = "*")
 public class UserController {
 
     private UserService userService;
@@ -20,7 +19,6 @@ public class UserController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
     public UsersListResponse getAllUsers() {
         List<User> users = userService.getAllUsers();
         UsersListResponse response = UsersListResponse.builder()
@@ -30,15 +28,14 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MODERATOR')")
     public User getUser(@PathVariable long userId) {
         User user = userService.getUserById(userId);
         return user;
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN') and hasAuthority('ADMIN:ALL_PERMISSION')")
     public AddUserResponse addUser(@RequestBody AddUserRequest req) {
+        System.out.println("Add user");
         User user = User.builder()
                 .name(req.getName())
                 .email(req.getEmail())
@@ -60,7 +57,6 @@ public class UserController {
     }
 
     @PutMapping
-    @PreAuthorize("hasRole('ADMIN') and hasAuthority('ADMIN:ALL_PERMISSION')")
     public UpdateUserResponse updateUser(@RequestBody UpdateUserRequest req) {
         User user = userService.getUserById(req.getId());
         UpdateUserResponse response = UpdateUserResponse.builder().build();
@@ -83,7 +79,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
-    @PreAuthorize("hasRole('ADMIN') and hasAuthority('ADMIN:ALL_PERMISSION')")
+    @PreAuthorize("hasRole('ADMIN')")
     public DeleteResponse deleteUser(@PathVariable long userId) {
         boolean success = userService.deleteUserById(userId);
         DeleteResponse response = DeleteResponse.builder()

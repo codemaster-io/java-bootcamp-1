@@ -23,7 +23,6 @@ public class ProductService {
                 .id(id)
                 .build();
         boolean success = productRepository.addProduct(product);
-        System.out.println("success = " + success);
         if(success) return product;
         return null;
     }

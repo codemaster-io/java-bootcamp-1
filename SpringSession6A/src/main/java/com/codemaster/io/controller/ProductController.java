@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,12 +37,15 @@ public class ProductController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'MODERATOR')")
-    public AddProductResponse addProduct(@RequestBody AddProductRequest req) {
+    public AddProductResponse addProduct(@RequestBody AddProductRequest req,
+                                         Principal principal) {
         Product product = Product.builder()
                 .name(req.getName())
                 .description(req.getDescription())
                 .price(req.getPrice())
+                .addedByUserEmail(principal.getName())
                 .build();
+
         Product responseProduct = productService.addProduct(product);
         AddProductResponse response = AddProductResponse.builder()
                 .product(responseProduct)
@@ -69,7 +73,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{productId}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MODERATOR')")
+    @PreAuthorize("@ACLService.hasPermitToDelete(#productId)")
     public DeleteResponse deleteProduct(@PathVariable long productId) {
         boolean success = productService.deleteProduct(productId);
         DeleteResponse response = DeleteResponse.builder()

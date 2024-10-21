@@ -36,18 +36,22 @@ export default function Dashboard() {
             try {
                 const productsResponse = await fetch(`${baseUrl}/api/products`, {
                     method: 'GET',
-                    headers: { 'Authorization': `Bearer ${token}` }
+                    headers: {'Authorization': `Bearer ${token}`}
                 })
-                const productsData = await productsResponse.json()
-                setLastProducts(productsData.products)
-                console.log(lastProducts);
+                if (productsResponse.ok) {
+                    const productsData = await productsResponse.json()
+                    setLastProducts(productsData.products)
+                    console.log(lastProducts);
+                }
 
                 const usersResponse = await fetch(`${baseUrl}/api/users`, {
                     method: 'GET',
-                    headers: { 'Authorization': `Bearer ${token}` }
+                    headers: {'Authorization': `Bearer ${token}`}
                 })
-                const usersData = await usersResponse.json()
-                setLastUsers(usersData.users)
+                if (usersResponse.ok) {
+                    const usersData = await usersResponse.json()
+                    setLastUsers(usersData.users)
+                }
             } catch (error) {
                 console.error('Error fetching dashboard data:', error)
             }
@@ -64,7 +68,7 @@ export default function Dashboard() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div className="bg-white shadow-lg rounded-lg overflow-hidden">
                     <div className="bg-gray-50 px-6 py-4">
-                        <h3 className="text-xl font-semibold text-gray-800">Last 10 Products</h3>
+                        <h3 className="text-xl font-semibold text-gray-800">Added Products</h3>
                     </div>
                     <div className="overflow-x-auto">
                         <table className="w-full">
@@ -87,9 +91,10 @@ export default function Dashboard() {
                         </table>
                     </div>
                 </div>
+
                 <div className="bg-white shadow-lg rounded-lg overflow-hidden">
                     <div className="bg-gray-50 px-6 py-4">
-                        <h3 className="text-xl font-semibold text-gray-800">Last 10 Users</h3>
+                        <h3 className="text-xl font-semibold text-gray-800">Registered Users</h3>
                     </div>
                     <div className="overflow-x-auto">
                         <table className="w-full">
