@@ -2,15 +2,18 @@ package com.codemaster.io.service;
 
 import com.codemaster.io.models.User;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class GithubAPIService {
@@ -26,8 +29,9 @@ public class GithubAPIService {
 
     private static final String TOKEN_URL = "https://github.com/login/oauth/access_token";
     private static final String USER_INFO_URL = "https://api.github.com/user";
-
     private static final String USER_EMAILS_URL = "https://api.github.com/user/emails"; // New endpoint for emails
+
+    private static final String REPOS_URL = "https://api.github.com/user/repos";
 
 
     private final RestTemplate restTemplate = new RestTemplate();
@@ -35,6 +39,7 @@ public class GithubAPIService {
     public User getUserFrom(String code) {
         String accessToken = exchangeCodeForAccessToken(code);
         if (accessToken != null) {
+//            fetchUserRepositories(accessToken);
             return fetchUserInfo(accessToken);
         }
         return null;
@@ -91,6 +96,33 @@ public class GithubAPIService {
                     .email(email)
                     .name(name)
                     .build();
+        }
+        return null;
+    }
+
+    private List<String> fetchUserRepositories(String accessToken) {
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBearerAuth(accessToken);
+
+            HttpEntity<String> entity = new HttpEntity<>(headers);
+            ResponseEntity<List<Map<String, Object>>> response = restTemplate.exchange(
+                    REPOS_URL,
+                    HttpMethod.GET,
+                    entity,
+                    new ParameterizedTypeReference<List<Map<String, Object>>>() {}
+            );
+//            System.out.println("response = " + response);
+
+            if (response.getStatusCode() == HttpStatus.OK) {
+                List<String> repos = response.getBody().stream()
+                        .map(repo -> (String) repo.get("html_url"))
+                        .collect(Collectors.toList());
+                System.out.println("repos = " + repos);
+                return repos;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
         return null;
     }

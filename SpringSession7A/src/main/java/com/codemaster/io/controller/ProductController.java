@@ -4,7 +4,6 @@ import com.codemaster.io.models.Product;
 import com.codemaster.io.models.dto.*;
 import com.codemaster.io.service.ProductService;
 import com.codemaster.io.service.SearchService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 

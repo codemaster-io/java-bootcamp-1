@@ -1,0 +1,18 @@
+version: '3.8'  # Specify the Docker Compose version
+
+services:
+  mysql:
+    image: mysql:latest  # Use the latest MySQL image
+    container_name: mysql_db  # Name of the container
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword  # Root password for MySQL
+      MYSQL_DATABASE: mydatabase  # Name of the database to create
+      MYSQL_USER: user  # New user to create
+      MYSQL_PASSWORD: userpassword  # Password for the new user
+    ports:
+      - "3306:3306"  # Expose MySQL on port 3306
+    volumes:
+      - mysql_data:/var/lib/mysql  # Mount a volume for data persistence
+
+volumes:
+  mysql_data:  # Define the volume for MySQL data persistence

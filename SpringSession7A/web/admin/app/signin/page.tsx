@@ -129,8 +129,9 @@ export default function SignIn() {
         const githubAuthURL = "https://github.com/login/oauth/authorize";
         const redirectURI = "http://localhost:4444/auth/github/callback"; // Update as needed
         const clientID = "Ov23liMZ5SUUR9Wb5tDQ"; // Replace with your GitHub Client ID
-        const scope = "user:email"; // Scopes for the access
-        const prompt = "consent"; // Always prompt for login
+        // const scope = "user:email user repo"; // Requesting email, user, public and private repository access
+        const scope = "user:email"; // Requesting email, user
+        const prompt = "consent";
 
         // Generate a random state parameter for security (useful for CSRF protection)
         const state = generateNonce();
