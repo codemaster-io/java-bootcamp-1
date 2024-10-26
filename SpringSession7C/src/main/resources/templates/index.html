@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java Bootcamp - Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            text-align: center;
+        }
+        .navbar {
+            background-color: #3498db;
+            padding: 10px;
+        }
+        .navbar a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .hero {
+            margin-top: 50px;
+        }
+        h1 {
+            color: #333;
+        }
+        .hero p {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+<div class="navbar">
+    <a href="/">Home</a>
+    <a href="/admin">Admin</a>
+    <a href="/dashboard">Dashboard</a>
+
+    <!-- Display logged-in user's name and Logout button if authenticated -->
+    <span th:if="${username != null}">
+                 Logged in as: <b th:text="${username}"></b>
+    </span>
+    <a th:if="${username != null}" th:href="@{/logout}" class="button">Logout</a>
+    <a th:if="${username == null}" href="/login" class="button">Login</a>
+
+</div>
+
+<div class="hero">
+    <h1>Home Page</h1>
+    <p>Master Java Development in our Bootcamp. Start your journey now!</p>
+</div>
+</body>
+</html>

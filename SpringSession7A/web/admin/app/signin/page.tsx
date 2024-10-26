@@ -86,6 +86,7 @@ export default function SignIn() {
         const scope = [
             "email",
             "profile",
+            // "https://www.googleapis.com/auth/calendar",
             // "https://www.googleapis.com/auth/drive",
             // "https://www.googleapis.com/auth/photoslibrary.readonly",
         ].join(" ");
@@ -112,11 +113,11 @@ export default function SignIn() {
 
                 console.log("Google Code: ", code)
 
-                const success = await loginWithOAuth(code, 'Google', 'code')
-                if (success) {
-                    window.removeEventListener("message", googleMessageListener);
-                    router.push('/dashboard')
-                }
+                // const success = await loginWithOAuth(code, 'Google', 'code')
+                // if (success) {
+                //     window.removeEventListener("message", googleMessageListener);
+                //     router.push('/dashboard')
+                // }
             }
         };
 
@@ -153,11 +154,14 @@ export default function SignIn() {
                 // Close the popup after receiving the code
                 // popup?.close();
 
-                const success = await loginWithOAuth(code, 'Github', 'code')
-                if (success) {
-                    window.removeEventListener("message", githubMessageListener);
-                    router.push('/dashboard')
-                }
+                console.log("Github Code: ", code)
+
+
+                // const success = await loginWithOAuth(code, 'Github', 'code')
+                // if (success) {
+                //     window.removeEventListener("message", githubMessageListener);
+                //     router.push('/dashboard')
+                // }
             }
         };
 
