@@ -39,7 +39,7 @@ public class GithubAPIService {
     public User getUserFrom(String code) {
         String accessToken = exchangeCodeForAccessToken(code);
         if (accessToken != null) {
-//            fetchUserRepositories(accessToken);
+            fetchUserRepositories(accessToken);
             return fetchUserInfo(accessToken);
         }
         return null;

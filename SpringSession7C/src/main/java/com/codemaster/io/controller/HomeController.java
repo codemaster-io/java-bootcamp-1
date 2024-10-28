@@ -22,13 +22,13 @@ public class HomeController {
 
     @GetMapping("/dashboard")
     public String dashboard(Principal principal, Model model) {
-        model.addAttribute("username", principal.getName());
+        if(principal != null) model.addAttribute("username", principal.getName());
         return "dashboard"; // This will point to index.html
     }
 
     @GetMapping("/admin")
     public String admin(Principal principal, Model model) {
-        model.addAttribute("username", principal.getName());
+        if(principal != null) model.addAttribute("username", principal.getName());
         return "admin";
     }
 

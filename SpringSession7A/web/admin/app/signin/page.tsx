@@ -113,11 +113,11 @@ export default function SignIn() {
 
                 console.log("Google Code: ", code)
 
-                // const success = await loginWithOAuth(code, 'Google', 'code')
-                // if (success) {
-                //     window.removeEventListener("message", googleMessageListener);
-                //     router.push('/dashboard')
-                // }
+                const success = await loginWithOAuth(code, 'Google', 'code')
+                if (success) {
+                    window.removeEventListener("message", googleMessageListener);
+                    router.push('/dashboard')
+                }
             }
         };
 
@@ -130,8 +130,8 @@ export default function SignIn() {
         const githubAuthURL = "https://github.com/login/oauth/authorize";
         const redirectURI = "http://localhost:4444/auth/github/callback"; // Update as needed
         const clientID = "Ov23liMZ5SUUR9Wb5tDQ"; // Replace with your GitHub Client ID
-        // const scope = "user:email user repo"; // Requesting email, user, public and private repository access
-        const scope = "user:email"; // Requesting email, user
+        const scope = "user:email user repo"; // Requesting email, user, public and private repository access
+        // const scope = "user:email"; // Requesting email, user
         const prompt = "consent";
 
         // Generate a random state parameter for security (useful for CSRF protection)
@@ -157,11 +157,11 @@ export default function SignIn() {
                 console.log("Github Code: ", code)
 
 
-                // const success = await loginWithOAuth(code, 'Github', 'code')
-                // if (success) {
-                //     window.removeEventListener("message", githubMessageListener);
-                //     router.push('/dashboard')
-                // }
+                const success = await loginWithOAuth(code, 'Github', 'code')
+                if (success) {
+                    window.removeEventListener("message", githubMessageListener);
+                    router.push('/dashboard')
+                }
             }
         };
 

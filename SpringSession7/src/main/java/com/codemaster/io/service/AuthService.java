@@ -1,7 +1,6 @@
 package com.codemaster.io.service;
 
 import com.codemaster.io.models.User;
-import com.codemaster.io.provider.OAuthToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,22 +22,10 @@ public class AuthService {
         this.userService = userService;
     }
 
-    public Authentication authenticate(String email, String password,
-                                       String authToken, String provider, String tokenType) {
-        Authentication authentication;
-        try {
-            if(authToken == null || authToken.equals("")) {
-                authentication = authenticationManager
-                        .authenticate(new UsernamePasswordAuthenticationToken(email, password));
-            } else {
-                authentication = authenticationManager.authenticate(
-                        new OAuthToken(authToken, provider, tokenType));
-            }
-            return authentication;
-        } catch (AuthenticationException exception) {
-            exception.printStackTrace();
-        }
-        return null;
+    public Authentication authenticate(String email, String password) {
+        Authentication authentication = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(email, password));;
+       return authentication;
     }
 
     public long signup(User user) {

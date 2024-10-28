@@ -32,6 +32,8 @@ public class CustomOAuthProvider implements AuthenticationProvider {
         if (authentication instanceof OAuthToken) {
             OAuthToken oAuthToken = (OAuthToken) authentication;
 
+            oAuthToken.getAuthToken();
+
             User user = null;
             if(oAuthToken.getTokenProvider().equals("Google")) {
                 user = googleAPIService.getUserFrom(oAuthToken.getAuthToken());
@@ -54,7 +56,7 @@ public class CustomOAuthProvider implements AuthenticationProvider {
             UserDetails userDetails = userService.loadUserByUsername(user.getEmail());
 
             // Create an authenticated token
-            return new OAuthToken(userDetails.getUsername(), oAuthToken.getAuthToken(),
+            return new OAuthToken(userDetails.getUsername(), "",
                     oAuthToken.getTokenProvider(),
                     oAuthToken.getTokenType(),
                     userDetails.getAuthorities());
